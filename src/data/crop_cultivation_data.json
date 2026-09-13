@@ -1,0 +1,1519 @@
+{
+  "metadata": {
+    "title": "Indian Agricultural Crops - Cultivation Guides & YouTube Links",
+    "created_date": "2026-01-25",
+    "total_crops": 90,
+    "total_video_links": 80,
+    "language": "English with Hindi content available",
+    "region": "India"
+  },
+  "categories": {
+    "1_cereals_millets": {
+      "category_name": "Cereals & Millets",
+      "crops": [
+        {
+          "crop_id": "RICE_001",
+          "crop_name": "Rice (Paddy)",
+          "local_names": ["Dhaan", "Chawal"],
+          "videos": [
+            {
+              "video_id": 1,
+              "title": "Rice Farming Complete Guide From Seeds to Harvest",
+              "url": "https://www.youtube.com/watch?v=llaYBdG7xo4",
+              "duration_approx": "45 min",
+              "focus": "Complete process from seeds to harvest",
+              "language": "English"
+            },
+            {
+              "video_id": 2,
+              "title": "Rice Cultivation | धान की खेती | चावल की खेती | Agronomy",
+              "url": "https://www.youtube.com/watch?v=cTHKEm8iFwU",
+              "duration_approx": "60 min",
+              "focus": "Agronomy lecture format with technical details",
+              "language": "Hindi/English"
+            },
+            {
+              "video_id": 3,
+              "title": "Seed treatment & sowing method of paddy",
+              "url": "https://www.youtube.com/watch?v=A5sWgIQJMTU",
+              "duration_approx": "25 min",
+              "focus": "Seed treatment and sowing techniques",
+              "language": "Hindi"
+            },
+            {
+              "video_id": 4,
+              "title": "धान की खेती: चावल का खेत से थाली तक का सफर",
+              "url": "https://www.youtube.com/watch?v=N22nmq1L6iQ",
+              "duration_approx": "30 min",
+              "focus": "Complete journey from field to plate",
+              "language": "Hindi"
+            },
+            {
+              "video_id": 5,
+              "title": "Paddy farming step by step in hindi",
+              "url": "https://www.youtube.com/watch?v=-lUwPAPLjhQ",
+              "duration_approx": "35 min",
+              "focus": "Step-by-step paddy farming",
+              "language": "Hindi"
+            }
+          ],
+          "best_season": "Monsoon (Kharif) - June to November",
+          "soil_type": "Alluvial, clayey loam",
+          "water_requirement": "High - 100-150 cm annually",
+          "profit_potential": "Medium-High",
+          "roi_months": 6
+        },
+        {
+          "crop_id": "WHEAT_002",
+          "crop_name": "Wheat",
+          "local_names": ["Gehu"],
+          "videos": [
+            {
+              "video_id": 6,
+              "title": "Boost Your WHEAT Yields with Effective Farming Methods",
+              "url": "https://www.youtube.com/watch?v=yhkXGvd-d8M",
+              "duration_approx": "40 min",
+              "focus": "Yield boost techniques and modern methods",
+              "language": "English"
+            },
+            {
+              "video_id": 7,
+              "title": "गेहूं की खेती में ज्यादा उत्पादन कैसे लें",
+              "url": "https://www.youtube.com/watch?v=549_yJOE2ZA",
+              "duration_approx": "30 min",
+              "focus": "Variety selection and production increase",
+              "language": "Hindi"
+            },
+            {
+              "video_id": 8,
+              "title": "Wheat Crop Farming Tips",
+              "url": "https://www.youtube.com/watch?v=dwwYkdWCu1I",
+              "duration_approx": "35 min",
+              "focus": "Farming tips with higher yield and income focus",
+              "language": "English"
+            },
+            {
+              "video_id": 9,
+              "title": "Wheat Farming Tips - Complete Guide",
+              "url": "https://www.youtube.com/watch?v=8kUIbnI9U3o",
+              "duration_approx": "25 min",
+              "focus": "Soil, fertilizer and weed management",
+              "language": "Hindi"
+            },
+            {
+              "video_id": 10,
+              "title": "How to Grow Wheat Crop With Update",
+              "url": "https://www.youtube.com/watch?v=Lzvld_ict9g",
+              "duration_approx": "20 min",
+              "focus": "Winter crop cultivation",
+              "language": "English"
+            }
+          ],
+          "best_season": "Winter (Rabi) - October to March",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 40-50 cm",
+          "profit_potential": "Medium",
+          "roi_months": 6
+        },
+        {
+          "crop_id": "MAIZE_003",
+          "crop_name": "Maize (Corn)",
+          "local_names": ["Makka", "Corn"],
+          "videos": [
+            {
+              "video_id": 11,
+              "title": "Corn Farming / Maize Cultivation - Step by Step Method",
+              "url": "https://www.youtube.com/watch?v=nfMLKP1nXK0",
+              "duration_approx": "50 min",
+              "focus": "Complete cultivation process",
+              "language": "English"
+            },
+            {
+              "video_id": 12,
+              "title": "A to Z Guide to Starting a Maize Farm",
+              "url": "https://www.youtube.com/watch?v=MBc-dQtM2A0",
+              "duration_approx": "35 min",
+              "focus": "Beginner-friendly A to Z guide",
+              "language": "Hindi/English"
+            },
+            {
+              "video_id": 13,
+              "title": "Organic Corn Farming - Complete Maize Cultivation Guide",
+              "url": "https://www.youtube.com/watch?v=CItXvBomX7k",
+              "duration_approx": "40 min",
+              "focus": "Organic farming methods",
+              "language": "English"
+            },
+            {
+              "video_id": 14,
+              "title": "Corn Crop Cultivation Guide",
+              "url": "https://www.youtube.com/watch?v=iHl_C46QwhI",
+              "duration_approx": "30 min",
+              "focus": "Regional Karnataka farming",
+              "language": "Kannada/English"
+            },
+            {
+              "video_id": 15,
+              "title": "Complete Corn Farming Guide",
+              "url": "https://www.youtube.com/watch?v=uhVUKK3h0L4",
+              "duration_approx": "38 min",
+              "focus": "Complete cultivation to harvest",
+              "language": "English"
+            }
+          ],
+          "best_season": "Summer (March-June) & Monsoon (July-September)",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 50-60 cm",
+          "profit_potential": "High",
+          "roi_months": 4
+        },
+        {
+          "crop_id": "BARLEY_004",
+          "crop_name": "Barley",
+          "local_names": ["Jau"],
+          "videos": [
+            {
+              "video_id": 16,
+              "title": "Agronomy Marathon: Complete Guide to Principles & Field Crops",
+              "url": "https://www.youtube.com/watch?v=SuEYGgyqWVw",
+              "duration_approx": "180 min",
+              "focus": "Comprehensive lecture covering all cereals including barley",
+              "language": "English"
+            }
+          ],
+          "best_season": "Winter (Rabi) - October to March",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate",
+          "profit_potential": "Medium",
+          "roi_months": 6
+        },
+        {
+          "crop_id": "SORGHUM_005",
+          "crop_name": "Sorghum (Jowar)",
+          "local_names": ["Jowar", "Jware"],
+          "videos": [
+            {
+              "video_id": 17,
+              "title": "Agronomy Marathon - Sorghum (Jowar) Cultivation",
+              "url": "https://www.youtube.com/watch?v=SuEYGgyqWVw",
+              "duration_approx": "180 min",
+              "focus": "Comprehensive sorghum cultivation lecture",
+              "language": "English"
+            }
+          ],
+          "best_season": "Kharif (Monsoon) - June to November",
+          "soil_type": "Well-drained soil, drought tolerant",
+          "water_requirement": "Low - 40-50 cm",
+          "profit_potential": "Medium",
+          "roi_months": 5
+        },
+        {
+          "crop_id": "BAJRA_006",
+          "crop_name": "Pearl Millet (Bajra)",
+          "local_names": ["Bajra", "Bajri"],
+          "videos": [],
+          "best_season": "Kharif (Monsoon) - June to October",
+          "soil_type": "Well-drained, sandy loam",
+          "water_requirement": "Low - 30-40 cm",
+          "profit_potential": "Medium",
+          "roi_months": 4
+        },
+        {
+          "crop_id": "RAGI_007",
+          "crop_name": "Finger Millet (Ragi/Mandua)",
+          "local_names": ["Ragi", "Mandua", "Nachni"],
+          "videos": [],
+          "best_season": "Kharif (Monsoon) - June to November",
+          "soil_type": "Well-drained, light soil",
+          "water_requirement": "Moderate - 50 cm",
+          "profit_potential": "Medium",
+          "roi_months": 5
+        },
+        {
+          "crop_id": "BUCKWHEAT_008",
+          "crop_name": "Buckwheat (Kuttu) - Pseudo-cereal",
+          "local_names": ["Kuttu", "Buckwheat"],
+          "videos": [],
+          "best_season": "Rabi (Winter) - September to March",
+          "soil_type": "Well-drained soil",
+          "water_requirement": "Moderate",
+          "profit_potential": "Low-Medium",
+          "roi_months": 4
+        }
+      ]
+    },
+    "2_pulses_legumes": {
+      "category_name": "Pulses (Legumes)",
+      "crops": [
+        {
+          "crop_id": "CHICKPEA_009",
+          "crop_name": "Chickpea/Gram (Chana)",
+          "local_names": ["Chana", "Kabuli"],
+          "videos": [
+            {
+              "video_id": 18,
+              "title": "Desi Chana - Chickpea Cultivation Package of Practices",
+              "url": "https://www.youtube.com/watch?v=lgqNxBUwd6E",
+              "duration_approx": "50 min",
+              "focus": "Complete package of practices",
+              "language": "English"
+            },
+            {
+              "video_id": 19,
+              "title": "घर पर उगाये चने का साग",
+              "url": "https://www.youtube.com/watch?v=S5MR92Sqzdo",
+              "duration_approx": "30 min",
+              "focus": "Home container growing",
+              "language": "Hindi"
+            },
+            {
+              "video_id": 20,
+              "title": "CHICKPEA - How Does it Grow?",
+              "url": "https://www.youtube.com/watch?v=vH6Vq9uRztk",
+              "duration_approx": "35 min",
+              "focus": "Visual guide to chickpea growth",
+              "language": "Hindi/English"
+            },
+            {
+              "video_id": 21,
+              "title": "Growing Chickpeas for the First Time",
+              "url": "https://www.youtube.com/watch?v=uGjsIrQ6P2c",
+              "duration_approx": "25 min",
+              "focus": "Beginner guide with challenges",
+              "language": "English"
+            },
+            {
+              "video_id": 22,
+              "title": "How to Grow Chickpeas in your Garden",
+              "url": "https://www.youtube.com/watch?v=Xq-Ag3627oc",
+              "duration_approx": "20 min",
+              "focus": "Home garden cultivation",
+              "language": "English"
+            }
+          ],
+          "best_season": "Rabi (Winter) - October to March",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Low - 30-40 cm",
+          "profit_potential": "High",
+          "roi_months": 6
+        },
+        {
+          "crop_id": "PIGEON_PEA_010",
+          "crop_name": "Pigeon Pea (Arhar/Tur)",
+          "local_names": ["Arhar", "Tur", "Tuver"],
+          "videos": [],
+          "best_season": "Kharif (Monsoon) - June to February",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 60-80 cm",
+          "profit_potential": "High",
+          "roi_months": 8
+        },
+        {
+          "crop_id": "GREEN_GRAM_011",
+          "crop_name": "Green Gram (Moong)",
+          "local_names": ["Moong", "Mung"],
+          "videos": [
+            {
+              "video_id": 23,
+              "title": "How to prepare field for urad and moong cultivation",
+              "url": "https://www.youtube.com/watch?v=M_uixunFp8o",
+              "duration_approx": "25 min",
+              "focus": "Field preparation techniques",
+              "language": "English"
+            }
+          ],
+          "best_season": "Kharif & Summer",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 40-60 cm",
+          "profit_potential": "High",
+          "roi_months": 3
+        },
+        {
+          "crop_id": "BLACK_GRAM_012",
+          "crop_name": "Black Gram (Urad)",
+          "local_names": ["Urad", "Urid", "Kali Dal"],
+          "videos": [
+            {
+              "video_id": 24,
+              "title": "Black Gram (Urad Dal) Crop Cultivation Guide",
+              "url": "https://www.youtube.com/watch?v=ZynFEdm9Knw",
+              "duration_approx": "50 min",
+              "focus": "Complete cultivation guide",
+              "language": "English"
+            },
+            {
+              "video_id": 25,
+              "title": "Black Gram cultivation",
+              "url": "https://www.youtube.com/watch?v=zCD7bHoyTss",
+              "duration_approx": "30 min",
+              "focus": "Tamil Nadu farming practices",
+              "language": "Tamil/English"
+            },
+            {
+              "video_id": 26,
+              "title": "उड़द दाल (Black Dal) की उन्नत किस्में",
+              "url": "https://www.youtube.com/watch?v=69whgETq0Q8",
+              "duration_approx": "25 min",
+              "focus": "Advanced varieties for maximum yield",
+              "language": "Hindi"
+            }
+          ],
+          "best_season": "Kharif & Summer",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 40-60 cm",
+          "profit_potential": "High",
+          "roi_months": 3
+        },
+        {
+          "crop_id": "LENTIL_013",
+          "crop_name": "Lentil (Masoor)",
+          "local_names": ["Masoor", "Masur"],
+          "videos": [],
+          "best_season": "Rabi (Winter) - October to March",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 40-50 cm",
+          "profit_potential": "High",
+          "roi_months": 6
+        },
+        {
+          "crop_id": "PEA_014",
+          "crop_name": "Pea (Matar)",
+          "local_names": ["Matar", "Pea", "Garden Pea"],
+          "videos": [],
+          "best_season": "Rabi (Winter) - October to March",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 50 cm",
+          "profit_potential": "Medium-High",
+          "roi_months": 4
+        },
+        {
+          "crop_id": "KIDNEY_BEAN_015",
+          "crop_name": "Kidney Bean (Rajma)",
+          "local_names": ["Rajma", "Red Bean"],
+          "videos": [],
+          "best_season": "Kharif (Monsoon) - June to October",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 60 cm",
+          "profit_potential": "Medium",
+          "roi_months": 4
+        },
+        {
+          "crop_id": "SOYBEAN_016",
+          "crop_name": "Soybean",
+          "local_names": ["Soybean"],
+          "videos": [],
+          "best_season": "Kharif (Monsoon) - June to October",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 60 cm",
+          "profit_potential": "High",
+          "roi_months": 4
+        }
+      ]
+    },
+    "3_oilseeds": {
+      "category_name": "Oilseeds",
+      "crops": [
+        {
+          "crop_id": "MUSTARD_017",
+          "crop_name": "Mustard/Rapeseed (Sarson)",
+          "local_names": ["Sarson", "Rai"],
+          "videos": [
+            {
+              "video_id": 27,
+              "title": "Growing Mustard (Sarson) from seeds in a storage box",
+              "url": "https://www.youtube.com/watch?v=PWdLRz-OUiI",
+              "duration_approx": "45 min",
+              "focus": "Storage box growing method",
+              "language": "English"
+            },
+            {
+              "video_id": 28,
+              "title": "How to Grow Lots of Mustard Leaves to Make Saag",
+              "url": "https://www.youtube.com/watch?v=Bgo0Ga9Wq1Q",
+              "duration_approx": "30 min",
+              "focus": "Leafy mustard for saag production",
+              "language": "English"
+            },
+            {
+              "video_id": 29,
+              "title": "Yellow Mustard Farming Made Easy",
+              "url": "https://www.youtube.com/watch?v=UcmLV0b21Eg",
+              "duration_approx": "25 min",
+              "focus": "Simplified farming technique",
+              "language": "English"
+            },
+            {
+              "video_id": 30,
+              "title": "सरसों की खेती की A to Z जानकारी",
+              "url": "https://www.youtube.com/watch?v=o7u0bEXq16g",
+              "duration_approx": "35 min",
+              "focus": "Complete A to Z guide in Hindi",
+              "language": "Hindi"
+            },
+            {
+              "video_id": 31,
+              "title": "Top 12 Scientific Tips for Maximum Yields",
+              "url": "https://www.youtube.com/watch?v=rDm0rs205f4",
+              "duration_approx": "40 min",
+              "focus": "Scientific farming tips",
+              "language": "English"
+            }
+          ],
+          "best_season": "Rabi (Winter) - September to March",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 50-60 cm",
+          "profit_potential": "High",
+          "roi_months": 6
+        },
+        {
+          "crop_id": "GROUNDNUT_018",
+          "crop_name": "Groundnut/Peanut",
+          "local_names": ["Groundnut", "Mungfali", "Peanut"],
+          "videos": [
+            {
+              "video_id": 32,
+              "title": "How to grow Peanut at Home - Groundnut Cultivation",
+              "url": "https://www.youtube.com/watch?v=0I7KR9Y8_4A",
+              "duration_approx": "40 min",
+              "focus": "Home garden cultivation",
+              "language": "English"
+            },
+            {
+              "video_id": 33,
+              "title": "How to Farm Groundnut - Cultivation to Harvesting",
+              "url": "https://www.youtube.com/watch?v=Xfuudi5yo38",
+              "duration_approx": "45 min",
+              "focus": "Field farming complete process",
+              "language": "English"
+            },
+            {
+              "video_id": 34,
+              "title": "How to grow groundnuts in pots - Terrace garden",
+              "url": "https://www.youtube.com/watch?v=RwOVg-91zNI",
+              "duration_approx": "30 min",
+              "focus": "Container growing method",
+              "language": "English"
+            },
+            {
+              "video_id": 35,
+              "title": "Brilliant Idea - How to Grow Peanuts at Home",
+              "url": "https://www.youtube.com/watch?v=PlsDOXPekB8",
+              "duration_approx": "35 min",
+              "focus": "Innovative home growing",
+              "language": "English"
+            },
+            {
+              "video_id": 36,
+              "title": "[Home Gardening] Tips for Growing Peanuts at Home",
+              "url": "https://www.youtube.com/watch?v=Y8tL4aSOKDA",
+              "duration_approx": "25 min",
+              "focus": "Home gardening tips",
+              "language": "English"
+            }
+          ],
+          "best_season": "Kharif (Monsoon) - June to October",
+          "soil_type": "Well-drained sandy loam",
+          "water_requirement": "Moderate - 50-70 cm",
+          "profit_potential": "High",
+          "roi_months": 5
+        },
+        {
+          "crop_id": "SESAME_019",
+          "crop_name": "Sesame (Til)",
+          "local_names": ["Til", "Sesame"],
+          "videos": [],
+          "best_season": "Kharif (Monsoon) - June to October",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 50 cm",
+          "profit_potential": "High",
+          "roi_months": 4
+        },
+        {
+          "crop_id": "SUNFLOWER_020",
+          "crop_name": "Sunflower",
+          "local_names": ["Sunflower", "Surajmukhi"],
+          "videos": [],
+          "best_season": "Summer (Feb-June) & Kharif",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 60 cm",
+          "profit_potential": "High",
+          "roi_months": 5
+        },
+        {
+          "crop_id": "LINSEED_021",
+          "crop_name": "Linseed/Flaxseed (Alsi)",
+          "local_names": ["Alsi", "Linseed"],
+          "videos": [],
+          "best_season": "Rabi (Winter) - September to March",
+          "soil_type": "Well-drained soil",
+          "water_requirement": "Moderate - 40 cm",
+          "profit_potential": "Medium",
+          "roi_months": 6
+        },
+        {
+          "crop_id": "CASTOR_022",
+          "crop_name": "Castor",
+          "local_names": ["Castor", "Arand"],
+          "videos": [],
+          "best_season": "Year-round perennial",
+          "soil_type": "Well-drained soil",
+          "water_requirement": "Low - 50-60 cm",
+          "profit_potential": "High",
+          "roi_months": 12
+        }
+      ]
+    },
+    "4_sugar_starch_crops": {
+      "category_name": "Sugar & Starch Crops",
+      "crops": [
+        {
+          "crop_id": "SUGARCANE_023",
+          "crop_name": "Sugarcane",
+          "local_names": ["Ganna", "Sugarcane"],
+          "videos": [
+            {
+              "video_id": 37,
+              "title": "Sugarcane Growing Techniques - Sugarcane Farming",
+              "url": "https://www.youtube.com/watch?v=f6KYFHy38-w",
+              "duration_approx": "45 min",
+              "focus": "Growing techniques and methods",
+              "language": "English"
+            },
+            {
+              "video_id": 38,
+              "title": "Sugarcane Farming (Complete Guide)",
+              "url": "https://www.youtube.com/watch?v=TTxYCQW5JYU",
+              "duration_approx": "60 min",
+              "focus": "Complete guide from cultivation to processing",
+              "language": "English"
+            },
+            {
+              "video_id": 39,
+              "title": "Sugarcane Farming in India - Village Life",
+              "url": "https://www.youtube.com/watch?v=BvDE6odSxrM",
+              "duration_approx": "35 min",
+              "focus": "Practical farming and village perspective",
+              "language": "English"
+            },
+            {
+              "video_id": 40,
+              "title": "गन्ने की बंधाई कैसे करें",
+              "url": "https://www.youtube.com/watch?v=XxVfQiID6xA",
+              "duration_approx": "30 min",
+              "focus": "Plant binding process",
+              "language": "Hindi"
+            },
+            {
+              "video_id": 41,
+              "title": "SUGARCANE FARMING / SUGARCANE CULTIVATION",
+              "url": "https://www.youtube.com/watch?v=ZfTIyrGQ8Fc",
+              "duration_approx": "50 min",
+              "focus": "Planting, care and harvesting guide",
+              "language": "English"
+            }
+          ],
+          "best_season": "Year-round with seasonal planting",
+          "soil_type": "Loamy soil, rich in organic matter",
+          "water_requirement": "High - 150-200 cm",
+          "profit_potential": "Very High",
+          "roi_months": 12
+        },
+        {
+          "crop_id": "POTATO_024",
+          "crop_name": "Potato",
+          "local_names": ["Aloo", "Potato"],
+          "videos": [],
+          "best_season": "Rabi (Winter) - September to March",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 50-60 cm",
+          "profit_potential": "High",
+          "roi_months": 4
+        },
+        {
+          "crop_id": "SWEET_POTATO_025",
+          "crop_name": "Sweet Potato",
+          "local_names": ["Sweet Potato", "Shakarkandi"],
+          "videos": [],
+          "best_season": "Kharif (Monsoon) - May to December",
+          "soil_type": "Well-drained sandy loam",
+          "water_requirement": "Moderate - 80 cm",
+          "profit_potential": "Medium-High",
+          "roi_months": 5
+        },
+        {
+          "crop_id": "CASSAVA_026",
+          "crop_name": "Cassava/Tapioca",
+          "local_names": ["Cassava", "Tapioca", "Manihot"],
+          "videos": [],
+          "best_season": "Kharif (Monsoon) - May to December",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 100 cm",
+          "profit_potential": "Medium",
+          "roi_months": 12
+        }
+      ]
+    },
+    "5_fibre_crops": {
+      "category_name": "Fibre Crops",
+      "crops": [
+        {
+          "crop_id": "COTTON_027",
+          "crop_name": "Cotton",
+          "local_names": ["Kapas", "Cotton"],
+          "videos": [
+            {
+              "video_id": 42,
+              "title": "Indian Cotton Farming - From Plantation to Harvest",
+              "url": "https://www.youtube.com/watch?v=buazuM7hkQk",
+              "duration_approx": "60 min",
+              "focus": "Comprehensive 1-hour detailed guide",
+              "language": "English"
+            },
+            {
+              "video_id": 43,
+              "title": "Complete Cotton Farming Guide: Pests, Climate, Seeds",
+              "url": "https://www.youtube.com/watch?v=Tg3g0MxTd7w",
+              "duration_approx": "50 min",
+              "focus": "Pest management and government policies",
+              "language": "English"
+            },
+            {
+              "video_id": 44,
+              "title": "क्यों कपास कहलाती है सफ़ेद सोना",
+              "url": "https://www.youtube.com/watch?v=I_vaq8CEg8E",
+              "duration_approx": "40 min",
+              "focus": "Complete farming guide (Hindi)",
+              "language": "Hindi"
+            },
+            {
+              "video_id": 45,
+              "title": "Cotton Farming: Complete Guide",
+              "url": "https://www.youtube.com/watch?v=BxTc3hV7kLE",
+              "duration_approx": "45 min",
+              "focus": "Quick complete guide",
+              "language": "English"
+            },
+            {
+              "video_id": 46,
+              "title": "कपास की खेती कब और कैसे की जाती है",
+              "url": "https://www.youtube.com/watch?v=uD7_RMWFGUU",
+              "duration_approx": "35 min",
+              "focus": "Complete A-Z guide",
+              "language": "Hindi"
+            }
+          ],
+          "best_season": "Kharif (Monsoon) - June to February",
+          "soil_type": "Black soil (Vertisol)",
+          "water_requirement": "Moderate - 80 cm",
+          "profit_potential": "Very High",
+          "roi_months": 8
+        },
+        {
+          "crop_id": "JUTE_028",
+          "crop_name": "Jute",
+          "local_names": ["Jute", "Pat"],
+          "videos": [],
+          "best_season": "Kharif (Monsoon) - March to August",
+          "soil_type": "Alluvial loamy soil",
+          "water_requirement": "High - 150-200 cm",
+          "profit_potential": "High",
+          "roi_months": 6
+        }
+      ]
+    },
+    "6_plantation_commercial_crops": {
+      "category_name": "Plantation & Commercial Crops",
+      "crops": [
+        {
+          "crop_id": "TEA_029",
+          "crop_name": "Tea",
+          "local_names": ["Tea", "Chai"],
+          "videos": [
+            {
+              "video_id": 47,
+              "title": "TEA FARMING / TEA CULTIVATION - How Tea Powder is Made",
+              "url": "https://www.youtube.com/watch?v=dTHansLrH0M",
+              "duration_approx": "40 min",
+              "focus": "Tea farming and powder making",
+              "language": "English"
+            },
+            {
+              "video_id": 48,
+              "title": "Munnar: South India's Tea Plantation Shangri-la",
+              "url": "https://www.youtube.com/watch?v=OXSGDj2xBrQ",
+              "duration_approx": "30 min",
+              "focus": "Kerala tea plantation visit",
+              "language": "English"
+            }
+          ],
+          "best_season": "Perennial - Year-round with seasonal harvests",
+          "soil_type": "Well-drained acidic soil",
+          "water_requirement": "High - 150-200 cm",
+          "profit_potential": "Very High",
+          "roi_months": 36
+        },
+        {
+          "crop_id": "COFFEE_030",
+          "crop_name": "Coffee",
+          "local_names": ["Coffee", "Koffee"],
+          "videos": [
+            {
+              "video_id": 49,
+              "title": "Coorg Coffee Farming - कॉफी की खेती कैसे करें",
+              "url": "https://www.youtube.com/watch?v=nAM6nitMU2U",
+              "duration_approx": "60 min",
+              "focus": "35-acre case study with detailed techniques",
+              "language": "Hindi/English"
+            },
+            {
+              "video_id": 50,
+              "title": "Coffee Plantation in India - A Little More About",
+              "url": "https://www.youtube.com/watch?v=pH-slQwCmNI",
+              "duration_approx": "35 min",
+              "focus": "Indian coffee cultivation overview",
+              "language": "English"
+            }
+          ],
+          "best_season": "Perennial - Year-round with seasonal harvests",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "High - 150-200 cm",
+          "profit_potential": "Very High",
+          "roi_months": 36
+        },
+        {
+          "crop_id": "COCONUT_031",
+          "crop_name": "Coconut",
+          "local_names": ["Nariyal", "Coconut"],
+          "videos": [],
+          "best_season": "Perennial - Year-round",
+          "soil_type": "Sandy loam, well-drained",
+          "water_requirement": "Moderate - 100-150 cm",
+          "profit_potential": "High",
+          "roi_months": 24
+        },
+        {
+          "crop_id": "ARECANUT_032",
+          "crop_name": "Arecanut (Supari)",
+          "local_names": ["Supari", "Arecanut", "Betel Nut"],
+          "videos": [],
+          "best_season": "Perennial - Year-round",
+          "soil_type": "Well-drained soil",
+          "water_requirement": "High - 200-250 cm",
+          "profit_potential": "Very High",
+          "roi_months": 24
+        },
+        {
+          "crop_id": "CASHEW_033",
+          "crop_name": "Cashew",
+          "local_names": ["Kaju", "Cashew"],
+          "videos": [],
+          "best_season": "Perennial - Year-round",
+          "soil_type": "Well-drained sandy soil",
+          "water_requirement": "Low - 75-150 cm",
+          "profit_potential": "Very High",
+          "roi_months": 36
+        }
+      ]
+    },
+    "7_spices_condiments": {
+      "category_name": "Spices & Condiments",
+      "crops": [
+        {
+          "crop_id": "TURMERIC_034",
+          "crop_name": "Turmeric",
+          "local_names": ["Haldi", "Turmeric"],
+          "videos": [
+            {
+              "video_id": 51,
+              "title": "Soilless Turmeric and Ginger Farming: 45 Tons Per Acre",
+              "url": "https://www.youtube.com/watch?v=Zwy4Su9AgZU",
+              "duration_approx": "55 min",
+              "focus": "Revolutionary soilless farming with high yield",
+              "language": "English"
+            },
+            {
+              "video_id": 52,
+              "title": "A Revolutionary New Method of Growing Ginger and Turmeric",
+              "url": "https://www.youtube.com/watch?v=I7fByDXYSvk",
+              "duration_approx": "40 min",
+              "focus": "Hydroponic growing method",
+              "language": "English"
+            },
+            {
+              "video_id": 53,
+              "title": "Rare Turmeric and Ginger Varieties You Need to Try",
+              "url": "https://www.youtube.com/watch?v=SyW7sJbNKVc",
+              "duration_approx": "25 min",
+              "focus": "Advanced varieties",
+              "language": "English"
+            },
+            {
+              "video_id": 54,
+              "title": "How to Grow Turmeric & Make it into Organic Powder Spice",
+              "url": "https://www.youtube.com/watch?v=nbehx3q_tmQ",
+              "duration_approx": "45 min",
+              "focus": "Growing to final powder product",
+              "language": "English"
+            }
+          ],
+          "best_season": "Kharif (Monsoon) - May to December",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "High - 150 cm",
+          "profit_potential": "Very High",
+          "roi_months": 8
+        },
+        {
+          "crop_id": "GINGER_035",
+          "crop_name": "Ginger",
+          "local_names": ["Adrak", "Ginger"],
+          "videos": [
+            {
+              "video_id": 55,
+              "title": "How to Grow Ginger / Turmeric - HARVEST Correct Time",
+              "url": "https://www.youtube.com/watch?v=6GCLhVg-88Y",
+              "duration_approx": "45 min",
+              "focus": "Container and field growing",
+              "language": "English"
+            }
+          ],
+          "best_season": "Kharif (Monsoon) - May to December",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "High - 150 cm",
+          "profit_potential": "Very High",
+          "roi_months": 8
+        },
+        {
+          "crop_id": "CHILLI_036",
+          "crop_name": "Chilli",
+          "local_names": ["Mirchi", "Chilli", "Pepper"],
+          "videos": [
+            {
+              "video_id": 56,
+              "title": "Chilli Farming Guide: From Planting to Harvesting",
+              "url": "https://www.youtube.com/watch?v=sTJK9aHQ-MM",
+              "duration_approx": "50 min",
+              "focus": "Complete step-by-step for beginners",
+              "language": "English"
+            },
+            {
+              "video_id": 57,
+              "title": "Chilli Farming - Chilli Cultivation - How To Farm Chilli",
+              "url": "https://www.youtube.com/watch?v=WGAtFb5R9VE",
+              "duration_approx": "45 min",
+              "focus": "Green & red chilli farming",
+              "language": "English"
+            },
+            {
+              "video_id": 58,
+              "title": "A Spicy Business: How to Make Money from Chilli Farming",
+              "url": "https://www.youtube.com/watch?v=7pJYU6DMbaA",
+              "duration_approx": "40 min",
+              "focus": "Business-oriented farming tips",
+              "language": "English"
+            },
+            {
+              "video_id": 59,
+              "title": "Chilli Farming - Complete Guide",
+              "url": "https://www.youtube.com/watch?v=q4j0SQw5v4g",
+              "duration_approx": "50 min",
+              "focus": "Comprehensive guide with market info",
+              "language": "English"
+            },
+            {
+              "video_id": 60,
+              "title": "Bird Eye Chilli Farming - Complete Guide",
+              "url": "https://www.youtube.com/watch?v=bEFPsDU9yhA",
+              "duration_approx": "45 min",
+              "focus": "High-value bird eye chilli",
+              "language": "English"
+            }
+          ],
+          "best_season": "Kharif (Monsoon) - May to February",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 60-80 cm",
+          "profit_potential": "Very High",
+          "roi_months": 6
+        },
+        {
+          "crop_id": "BLACK_PEPPER_037",
+          "crop_name": "Black Pepper",
+          "local_names": ["Kali Mirch", "Black Pepper"],
+          "videos": [],
+          "best_season": "Perennial - Year-round with seasonal harvests",
+          "soil_type": "Well-drained soil",
+          "water_requirement": "High - 150-200 cm",
+          "profit_potential": "Very High",
+          "roi_months": 36
+        },
+        {
+          "crop_id": "CORIANDER_038",
+          "crop_name": "Coriander",
+          "local_names": ["Dhania", "Coriander"],
+          "videos": [],
+          "best_season": "Rabi (Winter) - September to March",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 40 cm",
+          "profit_potential": "High",
+          "roi_months": 5
+        }
+      ]
+    },
+    "8_vegetables": {
+      "category_name": "Vegetables",
+      "crops": [
+        {
+          "crop_id": "TOMATO_039",
+          "crop_name": "Tomato",
+          "local_names": ["Tamatar", "Tomato"],
+          "videos": [
+            {
+              "video_id": 61,
+              "title": "Profitable tomato Farming in india",
+              "url": "https://www.youtube.com/watch?v=BxBuNKodGxo",
+              "duration_approx": "50 min",
+              "focus": "Profitable farming techniques",
+              "language": "English"
+            },
+            {
+              "video_id": 62,
+              "title": "Open field high-tech tomato farming in 1 acre",
+              "url": "https://www.youtube.com/watch?v=kFmt_ZzFgVA",
+              "duration_approx": "45 min",
+              "focus": "Modern high-tech farming",
+              "language": "English"
+            },
+            {
+              "video_id": 63,
+              "title": "How To Grow Tomatoes At Home (SEED TO HARVEST)",
+              "url": "https://www.youtube.com/watch?v=eySTo2GgvoY",
+              "duration_approx": "35 min",
+              "focus": "Home gardening complete guide",
+              "language": "English"
+            },
+            {
+              "video_id": 64,
+              "title": "Tomato Farming का सही तरीका - छप्परफाड़ PROFIT",
+              "url": "https://www.youtube.com/watch?v=q3KkDG-dy-w",
+              "duration_approx": "40 min",
+              "focus": "Hindi guide with profit focus",
+              "language": "Hindi"
+            }
+          ],
+          "best_season": "Summer (Feb-May) & Winter (Oct-Dec)",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 60-80 cm",
+          "profit_potential": "Very High",
+          "roi_months": 3
+        },
+        {
+          "crop_id": "ONION_040",
+          "crop_name": "Onion",
+          "local_names": ["Pyaaz", "Onion"],
+          "videos": [
+            {
+              "video_id": 65,
+              "title": "Onions, garlic, seed sowing and potatoes",
+              "url": "https://www.youtube.com/watch?v=cUdBXn5OSg4",
+              "duration_approx": "40 min",
+              "focus": "Seed sowing and planting methods",
+              "language": "English"
+            },
+            {
+              "video_id": 66,
+              "title": "Planting, Care, Harvesting - Onion Cultivation Guide",
+              "url": "https://www.youtube.com/watch?v=EhQFKkJmpm0",
+              "duration_approx": "50 min",
+              "focus": "Complete onion cultivation",
+              "language": "English"
+            },
+            {
+              "video_id": 67,
+              "title": "How to grow great garlic, onions, leeks",
+              "url": "https://www.youtube.com/watch?v=2yN5j1HRLxE",
+              "duration_approx": "45 min",
+              "focus": "Companion planting guide",
+              "language": "English"
+            },
+            {
+              "video_id": 68,
+              "title": "The Basics of Growing Garlic & Onions - 2025",
+              "url": "https://www.youtube.com/watch?v=4xIC2mAq4Cw",
+              "duration_approx": "55 min",
+              "focus": "Latest 2025 growing methods",
+              "language": "English"
+            }
+          ],
+          "best_season": "Rabi (Winter) - September to March",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 50-60 cm",
+          "profit_potential": "Very High",
+          "roi_months": 4
+        },
+        {
+          "crop_id": "GARLIC_041",
+          "crop_name": "Garlic",
+          "local_names": ["Lehsun", "Garlic"],
+          "videos": [
+            {
+              "video_id": 69,
+              "title": "Growing & Harvesting Garlic",
+              "url": "https://www.youtube.com/watch?v=UlA3Fbp1GuI",
+              "duration_approx": "50 min",
+              "focus": "Growing and harvesting techniques",
+              "language": "English"
+            }
+          ],
+          "best_season": "Rabi (Winter) - September to March",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 50 cm",
+          "profit_potential": "High",
+          "roi_months": 5
+        },
+        {
+          "crop_id": "GENERAL_VEGETABLES_042",
+          "crop_name": "General Vegetable Farming",
+          "local_names": ["Sabzi", "Vegetables"],
+          "videos": [
+            {
+              "video_id": 70,
+              "title": "Vegetable Farming कैसे शुरू करें - Step by Step",
+              "url": "https://www.youtube.com/watch?v=Ew8tQWL5LTE",
+              "duration_approx": "60 min",
+              "focus": "How to start vegetable farming (Hindi)",
+              "language": "Hindi"
+            }
+          ],
+          "best_season": "Year-round with seasonal varieties",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate to High",
+          "profit_potential": "High",
+          "roi_months": 3
+        }
+      ]
+    },
+    "9_fruits": {
+      "category_name": "Fruits",
+      "crops": [
+        {
+          "crop_id": "BANANA_043",
+          "crop_name": "Banana",
+          "local_names": ["Kela", "Banana"],
+          "videos": [
+            {
+              "video_id": 71,
+              "title": "How to Start Banana Farming - Step-by-Step Process",
+              "url": "https://www.youtube.com/watch?v=dH9r-77ZuM0",
+              "duration_approx": "45 min",
+              "focus": "Beginner-friendly step-by-step guide",
+              "language": "English"
+            },
+            {
+              "video_id": 72,
+              "title": "Banana Farming and Trading - Tissue Culture Banana",
+              "url": "https://www.youtube.com/watch?v=8XxuAFwbwIM",
+              "duration_approx": "40 min",
+              "focus": "Tissue culture methods and business",
+              "language": "English"
+            },
+            {
+              "video_id": 73,
+              "title": "Banana Farming Part 1 - Kele Ki Kheti LIVE Guide",
+              "url": "https://www.youtube.com/watch?v=UXdPFYRT3Iw",
+              "duration_approx": "35 min",
+              "focus": "Live training for beginners",
+              "language": "English"
+            },
+            {
+              "video_id": 74,
+              "title": "Banana farming in extreme weather - Tips by Jai Singh",
+              "url": "https://www.youtube.com/watch?v=eJh402oBn4g",
+              "duration_approx": "50 min",
+              "focus": "Expert farming in harsh conditions",
+              "language": "Hindi/English"
+            },
+            {
+              "video_id": 75,
+              "title": "Million Dollar Bananas: From Planting to Profit",
+              "url": "https://www.youtube.com/watch?v=YkRu-O9m_2I",
+              "duration_approx": "55 min",
+              "focus": "High-value banana business",
+              "language": "English"
+            }
+          ],
+          "best_season": "Year-round planting with seasonal harvests",
+          "soil_type": "Deep loamy soil, well-drained",
+          "water_requirement": "High - 120-150 cm",
+          "profit_potential": "Very High",
+          "roi_months": 12
+        },
+        {
+          "crop_id": "MANGO_044",
+          "crop_name": "Mango",
+          "local_names": ["Aam", "Mango"],
+          "videos": [
+            {
+              "video_id": 76,
+              "title": "Profitable mango farming using practical knowledge",
+              "url": "https://www.youtube.com/watch?v=jGI1uPWQOZg",
+              "duration_approx": "60 min",
+              "focus": "1-hour detailed practical guide",
+              "language": "English"
+            },
+            {
+              "video_id": 77,
+              "title": "Effective and Sustainable Weed Management in Mango",
+              "url": "https://www.youtube.com/watch?v=NSV5IC-LXmM",
+              "duration_approx": "35 min",
+              "focus": "Orchard management techniques",
+              "language": "English"
+            },
+            {
+              "video_id": 78,
+              "title": "Four years Updates - Mango Farming",
+              "url": "https://www.youtube.com/watch?v=FCHr2J6xjeA",
+              "duration_approx": "40 min",
+              "focus": "Long-term orchard updates",
+              "language": "English"
+            }
+          ],
+          "channel_reference": "Indian Mango Farming",
+          "channel_url": "https://www.youtube.com/c/IndianMangoFarming/videos",
+          "best_season": "Perennial - Year-round with seasonal flowering",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 75-100 cm",
+          "profit_potential": "Very High",
+          "roi_months": 36
+        },
+        {
+          "crop_id": "APPLE_045",
+          "crop_name": "Apple",
+          "local_names": ["Seb", "Apple"],
+          "videos": [
+            {
+              "video_id": 79,
+              "title": "Meet Richest Farmer Of Himachal With Next Gen Apple Farming",
+              "url": "https://www.youtube.com/watch?v=i7wZOWoWMtk",
+              "duration_approx": "50 min",
+              "focus": "High-tech apple farming in hills",
+              "language": "English"
+            }
+          ],
+          "best_season": "Perennial - temperate climate",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 60-75 cm",
+          "profit_potential": "Very High",
+          "roi_months": 36
+        },
+        {
+          "crop_id": "POMEGRANATE_046",
+          "crop_name": "Pomegranate",
+          "local_names": ["Anar", "Pomegranate"],
+          "videos": [
+            {
+              "video_id": 80,
+              "title": "Organic Pomegranate Farming",
+              "url": "https://www.youtube.com/watch?v=kI4iJ5m__p4",
+              "duration_approx": "45 min",
+              "focus": "Organic farming methods",
+              "language": "English"
+            },
+            {
+              "video_id": 81,
+              "title": "Pomegranate Farming / Pomegranate Cultivation",
+              "url": "https://www.youtube.com/watch?v=rdUgNBXO38A",
+              "duration_approx": "50 min",
+              "focus": "Complete cultivation guide",
+              "language": "English"
+            },
+            {
+              "video_id": 82,
+              "title": "Success Story Of Pomegranate Plantation In India",
+              "url": "https://www.youtube.com/watch?v=JMOwJFvr7lA",
+              "duration_approx": "35 min",
+              "focus": "Success case study",
+              "language": "English"
+            }
+          ],
+          "best_season": "Perennial - Year-round",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Low to Moderate - 50 cm",
+          "profit_potential": "Very High",
+          "roi_months": 24
+        }
+      ]
+    },
+    "10_floriculture": {
+      "category_name": "Floriculture",
+      "crops": [
+        {
+          "crop_id": "MARIGOLD_047",
+          "crop_name": "Marigold",
+          "local_names": ["Genda", "Marigold"],
+          "videos": [
+            {
+              "video_id": 83,
+              "title": "Marigold Flower Farming - गेंदा फूल की खेती",
+              "url": "https://www.youtube.com/watch?v=2dnoi86SRig",
+              "duration_approx": "40 min",
+              "focus": "Complete marigold farming guide",
+              "language": "Hindi/English"
+            },
+            {
+              "video_id": 84,
+              "title": "My simple secret to grow MARIGOLD flower plant at home",
+              "url": "https://www.youtube.com/watch?v=tIHDM3GkV6o",
+              "duration_approx": "35 min",
+              "focus": "Home growing secrets",
+              "language": "English"
+            },
+            {
+              "video_id": 85,
+              "title": "Marigold Farming - Low Investment, High Profit Flower",
+              "url": "https://www.youtube.com/watch?v=NF7CdCWgU14",
+              "duration_approx": "50 min",
+              "focus": "Profitability and ROI analysis",
+              "language": "English"
+            }
+          ],
+          "best_season": "Summer & Winter (Year-round)",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 40 cm",
+          "profit_potential": "High",
+          "roi_months": 2
+        },
+        {
+          "crop_id": "ROSE_048",
+          "crop_name": "Rose",
+          "local_names": ["Gulab", "Rose"],
+          "videos": [
+            {
+              "video_id": 86,
+              "title": "Flower farming in Odisha - How to start marigold and rose",
+              "url": "https://www.youtube.com/watch?v=v1ehOOj1SpI",
+              "duration_approx": "40 min",
+              "focus": "Flower farming for beginners",
+              "language": "English"
+            }
+          ],
+          "best_season": "Year-round with seasonal variations",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 50 cm",
+          "profit_potential": "High",
+          "roi_months": 8
+        },
+        {
+          "crop_id": "JASMINE_049",
+          "crop_name": "Jasmine",
+          "local_names": ["Jasmine", "Mogra"],
+          "videos": [
+            {
+              "video_id": 87,
+              "title": "Jasmine Farming (Complete Guide)",
+              "url": "https://www.youtube.com/watch?v=rjBkx4bY93k",
+              "duration_approx": "45 min",
+              "focus": "Complete jasmine farming guide",
+              "language": "English"
+            }
+          ],
+          "best_season": "Year-round",
+          "soil_type": "Well-drained loamy soil",
+          "water_requirement": "Moderate - 60 cm",
+          "profit_potential": "High",
+          "roi_months": 12
+        }
+      ]
+    }
+  },
+  "top_channels": [
+    {
+      "channel_id": 1,
+      "channel_name": "Discover Agriculture",
+      "url": "https://www.youtube.com/@discoveragriculture",
+      "specialization": "All crops with exam-oriented content",
+      "language": "English",
+      "subscriber_level": "High",
+      "best_for": "University students and serious farmers"
+    },
+    {
+      "channel_id": 2,
+      "channel_name": "Agriculture RS Rajput",
+      "url": "https://www.youtube.com/@AgriculturalRS.Rajput",
+      "specialization": "Agronomy lectures",
+      "language": "English",
+      "subscriber_level": "High",
+      "best_for": "Exam preparation and technical knowledge"
+    },
+    {
+      "channel_id": 3,
+      "channel_name": "Indian Farmer",
+      "url": "https://www.youtube.com/@IndianFarmer",
+      "specialization": "Success stories and business models",
+      "language": "Hindi/English",
+      "subscriber_level": "Very High",
+      "best_for": "Practical farming and profitability"
+    },
+    {
+      "channel_id": 4,
+      "channel_name": "AgroStar",
+      "url": "https://www.youtube.com/channel/UCnEo71tCmqMQyS0ZoP6P4gg",
+      "specialization": "Modern farming techniques",
+      "language": "Hindi",
+      "subscriber_level": "Very High",
+      "best_for": "Technology-driven farmers with mobile app support"
+    },
+    {
+      "channel_id": 5,
+      "channel_name": "Aasan Kheti",
+      "url": "https://www.youtube.com/@Aasankheti",
+      "specialization": "Live training sessions",
+      "language": "Hindi",
+      "subscriber_level": "High",
+      "best_for": "Interactive learning and Q&A sessions"
+    },
+    {
+      "channel_id": 6,
+      "channel_name": "Indian Farming Guide",
+      "url": "https://www.youtube.com/@indianfarmingguide",
+      "specialization": "Regional crop practices",
+      "language": "Hindi/English",
+      "subscriber_level": "High",
+      "best_for": "Region-specific farming information"
+    }
+  ],
+  "profit_potential_ranking": {
+    "very_high": [
+      "Cotton",
+      "Turmeric",
+      "Ginger",
+      "Chilli",
+      "Sugarcane",
+      "Tea",
+      "Coffee",
+      "Mango",
+      "Banana",
+      "Pomegranate",
+      "Cashew",
+      "Arecanut",
+      "Onion",
+      "Tomato"
+    ],
+    "high": [
+      "Rice",
+      "Wheat",
+      "Chickpea",
+      "Mustard",
+      "Groundnut",
+      "Maize",
+      "Rose",
+      "Jasmine",
+      "Black Pepper",
+      "Coriander"
+    ],
+    "medium": [
+      "Barley",
+      "Sorghum",
+      "Millets",
+      "Lentil",
+      "Kidney Bean",
+      "Sesame",
+      "Potato",
+      "Sweet Potato",
+      "Jute",
+      "Marigold"
+    ]
+  },
+  "roi_by_duration": {
+    "quick_return_3_6_months": [
+      "Vegetables",
+      "Marigold",
+      "Pulses",
+      "Green Gram",
+      "Black Gram",
+      "Tomato"
+    ],
+    "medium_return_8_12_months": [
+      "Rice",
+      "Wheat",
+      "Maize",
+      "Cotton",
+      "Chilli",
+      "Turmeric",
+      "Sugarcane",
+      "Banana"
+    ],
+    "long_return_24_36_months": [
+      "Mango",
+      "Pomegranate",
+      "Cashew",
+      "Coffee",
+      "Tea",
+      "Coconut",
+      "Apple",
+      "Jasmine"
+    ]
+  },
+  "soil_requirements": {
+    "well_drained_loamy": [
+      "Wheat",
+      "Maize",
+      "Chickpea",
+      "Groundnut",
+      "Tomato",
+      "Onion",
+      "Garlic",
+      "Chilli",
+      "Turmeric",
+      "Ginger"
+    ],
+    "black_soil_vertisol": [
+      "Cotton",
+      "Sorghum",
+      "Chickpea"
+    ],
+    "sandy_loam": [
+      "Groundnut",
+      "Bajra",
+      "Coconut",
+      "Cashew"
+    ],
+    "alluvial_soil": [
+      "Rice",
+      "Jute",
+      "Sugarcane"
+    ],
+    "acidic_soil": [
+      "Tea",
+      "Coffee"
+    ]
+  },
+  "water_requirements": {
+    "low_below_50cm": [
+      "Bajra",
+      "Sorghum",
+      "Pomegranate"
+    ],
+    "moderate_50_100cm": [
+      "Wheat",
+      "Maize",
+      "Chickpea",
+      "Mustard",
+      "Groundnut",
+      "Potato",
+      "Onion",
+      "Tomato",
+      "Mango"
+    ],
+    "high_100_150cm": [
+      "Rice",
+      "Banana",
+      "Coconut",
+      "Tea",
+      "Coffee"
+    ],
+    "very_high_above_150cm": [
+      "Sugarcane",
+      "Jute",
+      "Arecanut"
+    ]
+  }
+}

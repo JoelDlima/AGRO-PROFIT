@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AgroProfit Brand Colors -->
+    <color name="colorPrimary">#22c55e</color>
+    <color name="colorPrimaryDark">#15803d</color>
+    <color name="colorAccent">#4ade80</color>
+    
+    <!-- Splash Screen Background (Dark Theme) -->
+    <color name="splash_background">#1a1a2e</color>
+</resources>

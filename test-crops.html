@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Data Availability Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #fetchBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        #fetchBtn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #fetchBtn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        #clearBtn {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        #clearBtn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.3em;
+            color: #667eea;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .crop-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .crop-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .crop-card.success {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        }
+
+        .crop-card.empty {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        }
+
+        .crop-card.error {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        .crop-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 10px;
+        }
+
+        .crop-count {
+            font-size: 2em;
+            font-weight: bold;
+            color: #0984e3;
+            margin: 10px 0;
+        }
+
+        .crop-status {
+            font-size: 0.9em;
+            color: #636e72;
+            margin-top: 5px;
+        }
+
+        .crop-variations {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.85em;
+            color: #636e72;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .summary h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌾 Crop Data Availability Test</h1>
+        <p class="subtitle">Testing Government Mandi API for all crop variations</p>
+        
+        <div class="controls">
+            <button id="fetchBtn">🔍 Fetch All Crops</button>
+            <button id="clearBtn">🗑️ Clear Results</button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Fetching crop data... This may take a while...</p>
+            <p id="progress"></p>
+        </div>
+
+        <div class="summary" id="summary">
+            <h2>📊 Summary</h2>
+            <div class="summary-stats">
+                <div class="stat">
+                    <div class="stat-value" id="totalCrops">0</div>
+                    <div class="stat-label">Total Crops Tested</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="cropsWithData">0</div>
+                    <div class="stat-label">Crops With Data</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="totalRecords">0</div>
+                    <div class="stat-label">Total Records</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        const API_KEY = 'YOUR_DATA_GOV_API_KEY';
+        const API_URL = 'https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070';
+
+        const cropVariations = [
+            { name: 'Tomato', variations: ['Tomato'] },
+            { name: 'Wheat', variations: ['Wheat', 'Gehun'] },
+            { name: 'Rice', variations: ['Rice', 'Paddy', 'Paddy(Dhan)', 'Dhan'] },
+            { name: 'Cotton', variations: ['Cotton', 'Kapas'] },
+            { name: 'Onion', variations: ['Onion', 'Onion Big', 'Onion Small'] },
+            { name: 'Potato', variations: ['Potato', 'Aloo'] },
+            { name: 'Sugarcane', variations: ['Sugarcane', 'Sugar Cane', 'Ganna'] },
+            { name: 'Soybean', variations: ['Soybean', 'Soya Bean', 'Soyabean', 'Soya bean'] },
+            { name: 'Maize', variations: ['Maize', 'Makka', 'Corn'] },
+            { name: 'Bajra', variations: ['Bajra', 'Bajri', 'Pearl Millet'] },
+            { name: 'Groundnut', variations: ['Groundnut', 'Ground Nut', 'Peanut', 'Moongphalli'] },
+            { name: 'Mustard', variations: ['Mustard', 'Sarson', 'Rai'] },
+            { name: 'Tur', variations: ['Tur', 'Arhar', 'Pigeon Pea', 'Tur(Arhar)'] },
+            { name: 'Gram', variations: ['Gram', 'Chana', 'Bengal Gram'] },
+            { name: 'Moong', variations: ['Moong', 'Green Gram', 'Mung'] },
+            { name: 'Urad', variations: ['Urad', 'Black Gram'] },
+            { name: 'Jowar', variations: ['Jowar', 'Sorghum'] },
+            { name: 'Barley', variations: ['Barley', 'Jau'] },
+            { name: 'Sunflower', variations: ['Sunflower', 'Sun Flower'] },
+            { name: 'Sesame', variations: ['Sesame', 'Til', 'Gingelly'] },
+        ];
+
+        async function fetchCropData(cropName) {
+            const params = new URLSearchParams({
+                'api-key': API_KEY,
+                'format': 'json',
+                'limit': '1',
+                'offset': '0',
+                'filters[commodity]': cropName
+            });
+
+            try {
+                const response = await fetch(`${API_URL}?${params.toString()}`, {
+                    signal: AbortSignal.timeout(30000)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return {
+                    count: data.count || 0,
+                    total: data.total || 0,
+                    success: true
+                };
+            } catch (error) {
+                return {
+                    count: 0,
+                    total: 0,
+                    success: false,
+                    error: error.message
+                };
+            }
+        }
+
+        async function testAllCrops() {
+            const fetchBtn = document.getElementById('fetchBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const summary = document.getElementById('summary');
+            const progress = document.getElementById('progress');
+
+            fetchBtn.disabled = true;
+            clearBtn.disabled = true;
+            loading.style.display = 'block';
+            results.innerHTML = '';
+            summary.style.display = 'none';
+
+            let totalTested = 0;
+            let totalWithData = 0;
+            let totalRecordsCount = 0;
+
+            for (let i = 0; i < cropVariations.length; i++) {
+                const crop = cropVariations[i];
+                progress.textContent = `Testing ${i + 1} of ${cropVariations.length}: ${crop.name}`;
+
+                let bestResult = { count: 0, variation: '' };
+
+                for (const variation of crop.variations) {
+                    const result = await fetchCropData(variation);
+                    
+                    if (result.success && result.total > bestResult.count) {
+                        bestResult = {
+                            count: result.total,
+                            variation: variation,
+                            ...result
+                        };
+                    }
+
+                    // Small delay to avoid rate limiting
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                }
+
+                totalTested++;
+                if (bestResult.count > 0) {
+                    totalWithData++;
+                    totalRecordsCount += bestResult.count;
+                }
+
+                const card = document.createElement('div');
+                card.className = `crop-card ${bestResult.count > 0 ? 'success' : (bestResult.success ? 'empty' : 'error')}`;
+                
+                card.innerHTML = `
+                    <div class="crop-name">${crop.name}</div>
+                    <div class="crop-count">${bestResult.count.toLocaleString()}</div>
+                    <div class="crop-status">
+                        ${bestResult.count > 0 ? '✅ Data Available' : (bestResult.success ? '⚠️ No Data' : '❌ Error')}
+                    </div>
+                    <div class="crop-variations">
+                        <strong>Best Match:</strong> ${bestResult.variation || 'None'}<br>
+                        <strong>Tested:</strong> ${crop.variations.join(', ')}
+                    </div>
+                `;
+                
+                results.appendChild(card);
+            }
+
+            // Update summary
+            document.getElementById('totalCrops').textContent = totalTested;
+            document.getElementById('cropsWithData').textContent = totalWithData;
+            document.getElementById('totalRecords').textContent = totalRecordsCount.toLocaleString();
+            summary.style.display = 'block';
+
+            loading.style.display = 'none';
+            fetchBtn.disabled = false;
+            clearBtn.disabled = false;
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('summary').style.display = 'none';
+        }
+
+        document.getElementById('fetchBtn').addEventListener('click', testAllCrops);
+        document.getElementById('clearBtn').addEventListener('click', clearResults);
+    </script>
+</body>
+</html>

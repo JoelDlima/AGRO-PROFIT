@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* AgroProfit - Earthy Green Agriculture Theme */
+    --background: 45 30% 97%;
+    --foreground: 30 25% 15%;
+
+    --card: 45 25% 95%;
+    --card-foreground: 30 25% 15%;
+
+    --popover: 45 30% 97%;
+    --popover-foreground: 30 25% 15%;
+
+    /* Forest Green Primary */
+    --primary: 90 60% 22%;
+    --primary-foreground: 45 30% 97%;
+
+    /* Terracotta Secondary */
+    --secondary: 20 45% 55%;
+    --secondary-foreground: 45 30% 97%;
+
+    /* Muted earthy tones */
+    --muted: 45 20% 90%;
+    --muted-foreground: 30 15% 45%;
+
+    /* Golden Wheat Accent */
+    --accent: 42 85% 55%;
+    --accent-foreground: 30 25% 15%;
+
+    /* Success Green */
+    --success: 142 70% 35%;
+    --success-foreground: 45 30% 97%;
+
+    /* Warning Amber */
+    --warning: 38 92% 50%;
+    --warning-foreground: 30 25% 15%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 45 30% 97%;
+
+    --border: 45 20% 85%;
+    --input: 45 20% 85%;
+    --ring: 90 60% 22%;
+
+    --radius: 0.75rem;
+
+    /* Custom gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(90 60% 22%) 0%, hsl(90 50% 30%) 50%, hsl(42 85% 55%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(45 30% 97%) 0%, hsl(45 25% 93%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(142 70% 35%) 0%, hsl(142 60% 45%) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px -2px hsl(30 25% 15% / 0.08);
+    --shadow-md: 0 4px 16px -4px hsl(30 25% 15% / 0.12);
+    --shadow-lg: 0 8px 32px -8px hsl(30 25% 15% / 0.16);
+    --shadow-glow: 0 0 40px hsl(90 60% 22% / 0.15);
+
+    /* Sidebar */
+    --sidebar-background: 90 50% 18%;
+    --sidebar-foreground: 45 30% 95%;
+    --sidebar-primary: 42 85% 55%;
+    --sidebar-primary-foreground: 30 25% 15%;
+    --sidebar-accent: 90 40% 25%;
+    --sidebar-accent-foreground: 45 30% 95%;
+    --sidebar-border: 90 40% 25%;
+    --sidebar-ring: 42 85% 55%;
+  }
+
+  .dark {
+    --background: 30 20% 10%;
+    --foreground: 45 30% 95%;
+
+    --card: 30 18% 14%;
+    --card-foreground: 45 30% 95%;
+
+    --popover: 30 18% 14%;
+    --popover-foreground: 45 30% 95%;
+
+    --primary: 90 55% 45%;
+    --primary-foreground: 30 20% 10%;
+
+    --secondary: 20 40% 45%;
+    --secondary-foreground: 45 30% 95%;
+
+    --muted: 30 15% 20%;
+    --muted-foreground: 45 15% 60%;
+
+    --accent: 42 80% 50%;
+    --accent-foreground: 30 20% 10%;
+
+    --success: 142 65% 40%;
+    --success-foreground: 30 20% 10%;
+
+    --warning: 38 90% 55%;
+    --warning-foreground: 30 20% 10%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 45 30% 95%;
+
+    --border: 30 15% 22%;
+    --input: 30 15% 22%;
+    --ring: 90 55% 45%;
+
+    --sidebar-background: 30 20% 8%;
+    --sidebar-foreground: 45 30% 95%;
+    --sidebar-primary: 42 80% 50%;
+    --sidebar-primary-foreground: 30 20% 10%;
+    --sidebar-accent: 30 15% 15%;
+    --sidebar-accent-foreground: 45 30% 95%;
+    --sidebar-border: 30 15% 18%;
+    --sidebar-ring: 42 80% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nunito', sans-serif;
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-hero);
+  }
+
+  .bg-gradient-hero {
+    background-image: var(--gradient-hero);
+  }
+
+  .bg-gradient-card {
+    background-image: var(--gradient-card);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation delays */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/30 rounded-full hover:bg-primary/50 transition-colors;
+}
