@@ -147,9 +147,9 @@ export default function Dashboard() {
               <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
                 {t("dashboard.welcome")}, {displayName}! 🙏
               </h1>
-              <p className="text-muted-foreground flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary" />
-                <span>{currentDisplayLocation}</span>
+              <p className="text-muted-foreground flex items-center gap-2 flex-wrap">
+                <MapPin className="h-4 w-4 text-primary shrink-0" />
+                <span className="font-medium text-foreground">{currentDisplayLocation}</span>
                 {userLocation && (
                   <span className="text-[11px] bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
                     ● GPS Active
@@ -164,12 +164,12 @@ export default function Dashboard() {
         {weatherData && !weatherLoading && (
           <Card className="mb-6 animate-slide-up border-blue-200 dark:border-blue-800">
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <Cloud className="h-5 w-5 text-blue-500" />
                   <CardTitle className="text-lg">{t("weather.conditions")}</CardTitle>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-sm font-medium text-foreground flex items-center gap-1.5">
                     <MapPin className="h-3.5 w-3.5 text-primary" />
                     {currentDisplayLocation}

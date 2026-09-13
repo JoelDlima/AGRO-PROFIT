@@ -490,7 +490,12 @@ export default function Chatbot() {
                       ? "bg-muted text-foreground rounded-tl-sm" 
                       : "bg-primary text-primary-foreground rounded-tr-sm"
                   )}>
-                    <div className="text-sm whitespace-pre-wrap prose prose-sm dark:prose-invert max-w-none" 
+                    <div className={cn(
+                          "text-sm leading-relaxed max-w-none",
+                          message.role === "assistant" 
+                            ? "prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-1.5" 
+                            : "whitespace-pre-wrap"
+                        )} 
                          dangerouslySetInnerHTML={{ 
                            __html: message.role === "assistant" 
                              ? formatMarkdown(message.content)

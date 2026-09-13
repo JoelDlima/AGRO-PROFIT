@@ -5,6 +5,8 @@
  */
 
 
+import { getApiUrl } from "@/lib/api";
+
 const API_KEY = import.meta.env.VITE_DATA_GOV_API_KEY || "";
 const API_BASE = "https://api.data.gov.in/resource";
 const RAINFALL_RESOURCE_ID = "d758a71b-8caf-489b-a4c8-929e894e4a0b";
@@ -45,7 +47,7 @@ export async function fetchRainfallData(
   
   // Tier 1: Same-origin Vercel serverless proxy /api/rainfall
   try {
-    const res = await fetch(`/api/rainfall?state=${encodeURIComponent(state || 'Maharashtra')}&limit=50`);
+    const res = await fetch(getApiUrl(`/api/rainfall?state=${encodeURIComponent(state || 'Maharashtra')}&limit=50`));
     if (res.ok) {
       const data = await res.json();
       if (data.records && Array.isArray(data.records) && data.records.length > 0) {
@@ -58,7 +60,9 @@ export async function fetchRainfallData(
 
   // Tier 2: Direct Government of India API
   try {
-    const govKey = API_KEY || "";
+    const govKey = (API_KEY && !API_KEY.startsWith("579b902f")) 
+      ? API_KEY 
+      : "579b464db66ec23bdd000001a185928fbe0347295f3617eba10d887c";
     const directUrl = `${API_BASE}/${RAINFALL_RESOURCE_ID}?api-key=${govKey}&format=json&limit=50&filters[state]=${encodeURIComponent(state || 'Maharashtra')}`;
     const directRes = await fetch(directUrl);
     if (directRes.ok) {

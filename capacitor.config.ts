@@ -4,11 +4,12 @@ const config: CapacitorConfig = {
   appId: 'com.agroprofit.app',
   appName: 'AgroProfit',
   webDir: 'dist',
-  server: {
-    // Load from live Vercel URL
-    url: 'https://agro-profit-pro.vercel.app',
-    cleartext: true
-  },
+  // Standalone offline-ready APK: bundled assets from dist/ are served locally
+  // (To switch back to live webview mode, uncomment the server block below)
+  // server: {
+  //   url: 'https://agro-profit-pro.vercel.app',
+  //   cleartext: true
+  // },
   android: {
     allowMixedContent: true,
     captureInput: true,
@@ -23,7 +24,7 @@ const config: CapacitorConfig = {
     StatusBar: {
       style: 'DARK',
       backgroundColor: '#1a1a2e',
-      overlaysWebView: true,
+      overlaysWebView: false,
     }
   }
 };

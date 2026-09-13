@@ -1,4 +1,4 @@
-Write-Host "🌾 Building AgroProfit Pro Android APK..." -ForegroundColor Green
+Write-Host "[AgroProfit] Building Android APK..." -ForegroundColor Green
 
 Write-Host "`n1. Building web frontend assets..." -ForegroundColor Cyan
 npm run build
@@ -19,9 +19,12 @@ if ($gradleStatus -ne 0) { Write-Error "Gradle APK build failed"; exit 1 }
 Write-Host "`n4. Copying generated APK to apk/ folder..." -ForegroundColor Cyan
 New-Item -ItemType Directory -Force -Path apk | Out-Null
 Copy-Item "android\app\build\outputs\apk\debug\app-debug.apk" -Destination "apk\AgroProfit-v1.2.0.apk" -Force
+$downloadsPath = Join-Path $env:USERPROFILE "Downloads\AgroProfit-v1.2.0.apk"
+Copy-Item "android\app\build\outputs\apk\debug\app-debug.apk" -Destination $downloadsPath -Force
 
 $apk = Get-Item "apk\AgroProfit-v1.2.0.apk"
 $sizeMb = [math]::Round($apk.Length / 1MB, 2)
-Write-Host "`n✅ APK successfully built and ready!" -ForegroundColor Green
-Write-Host "📁 Location: $($apk.FullName)" -ForegroundColor Yellow
-Write-Host "📦 Size: $sizeMb MB" -ForegroundColor Yellow
+Write-Host "`n[SUCCESS] APK successfully built and ready!" -ForegroundColor Green
+Write-Host "Repo Location:     $($apk.FullName)" -ForegroundColor Yellow
+Write-Host "Downloads Folder:  $downloadsPath" -ForegroundColor Yellow
+Write-Host "Size:              $sizeMb MB" -ForegroundColor Yellow

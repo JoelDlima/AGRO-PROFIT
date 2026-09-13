@@ -5,9 +5,8 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // base: './' works for both Vercel (https) and Capacitor (file://)
-  // Vercel handles relative paths correctly
-  base: './',
+  // Root base ensures absolute asset URLs (/assets/...) that never 404 on deep routes or SPA navigation
+  base: '/',
   server: {
     host: "::",
     port: 8080,

@@ -6,11 +6,15 @@
  * Resource ID: 9ef84268-d588-465a-a308-a864a43d0070
  */
 
+import { getApiUrl } from "@/lib/api";
+
 const AGMARKNET_API_BASE = "https://api.data.gov.in/resource";
 const RESOURCE_ID = "9ef84268-d588-465a-a308-a864a43d0070";
 
-const API_KEY = import.meta.env.VITE_DATA_GOV_API_KEY || "";
-const VERIFIED_DATA_GOV_KEY = API_KEY;
+const VERIFIED_DATA_GOV_KEY = "579b464db66ec23bdd000001a185928fbe0347295f3617eba10d887c";
+// Use verified key if user key is empty or is the known invalid key
+const envKey = import.meta.env.VITE_DATA_GOV_API_KEY;
+const API_KEY = (envKey && !envKey.startsWith("579b902f")) ? envKey : VERIFIED_DATA_GOV_KEY;
 
 // Commodity name mapping - API uses different names than our display names
 const COMMODITY_NAME_MAP: Record<string, string> = {
@@ -87,7 +91,7 @@ export async function fetchMandiPrices(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s timeout
 
-    const proxyRes = await fetch(`/api/mandi?${serverlessParams.toString()}`, {
+    const proxyRes = await fetch(getApiUrl(`/api/mandi?${serverlessParams.toString()}`), {
       signal: controller.signal,
       headers: { Accept: 'application/json' },
     });

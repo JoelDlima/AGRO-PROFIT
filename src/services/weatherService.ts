@@ -5,6 +5,8 @@
  * Proxied through Vercel Serverless /api/weather with Open-Meteo fallback
  */
 
+import { getApiUrl } from "@/lib/api";
+
 export interface WeatherData {
   temp: number;
   feels_like: number;
@@ -73,7 +75,7 @@ export async function getCurrentWeather(
     if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
       url = `/api/weather?lat=${latitude}&lon=${longitude}&location=${encodeURIComponent(location || 'India')}`;
     }
-    const res = await fetch(url);
+    const res = await fetch(getApiUrl(url));
     if (res.ok) {
       const result = await res.json();
       if (result.success && result.data) {

@@ -286,7 +286,7 @@ export default function Forum() {
                 New Post
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+            <DialogContent className="w-[94vw] sm:max-w-2xl max-h-[88vh] overflow-y-auto rounded-2xl p-4 sm:p-6">
               <DialogHeader>
                 <DialogTitle>Create a New Discussion</DialogTitle>
                 <DialogDescription>
@@ -547,7 +547,7 @@ export default function Forum() {
 
         {/* Discussion / Message Dialog */}
         <Dialog open={discussionOpen} onOpenChange={setDiscussionOpen}>
-          <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0 overflow-hidden">
+          <DialogContent className="w-[94vw] sm:max-w-2xl max-h-[88vh] flex flex-col p-0 overflow-hidden rounded-2xl">
             {activePost && (
               <>
                 <DialogHeader className="p-6 pb-3 border-b">
