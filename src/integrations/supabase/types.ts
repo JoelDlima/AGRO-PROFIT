@@ -363,7 +363,7 @@ export type Database = {
   }
 }
 
-type PublicSchema = Database[typeof "public"]
+type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   PublicTableNameOrOptions extends

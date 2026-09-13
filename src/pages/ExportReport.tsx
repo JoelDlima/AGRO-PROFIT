@@ -92,7 +92,7 @@ export default function ExportReport() {
         
       } else {
         // Historical Prices Report
-        const historyData = await getPriceHistory(selectedCropData?.name || "", 14);
+        const historyData = await getPriceHistory(selectedCropData?.name || "", undefined, 14);
         
         if (historyData && historyData.length > 0) {
           // Group by date and calculate daily averages
@@ -187,7 +187,7 @@ export default function ExportReport() {
         });
       } else {
         // Historical prices CSV
-        const historyData = await getPriceHistory(selectedCropData?.name || "", 14);
+        const historyData = await getPriceHistory(selectedCropData?.name || "", undefined, 14);
         csvContent = "Date,Market,State,Modal Price\n";
         
         historyData?.forEach((record: any) => {

@@ -123,6 +123,7 @@ export default function Dashboard() {
   const detectedLocationName = userLocation?.displayName || userLocation?.city;
   const currentDisplayLocation = detectedLocationName || profile?.state || 'India';
   const effectiveState = userLocation?.state || profile?.state || 'India';
+  const displayState = effectiveState;
 
   // Fetch weather data for user's location (using GPS lat/lon if enabled)
   const { data: weatherData, isLoading: weatherLoading } = useQuery({
@@ -490,8 +491,8 @@ export default function Dashboard() {
             />
             
             {/* Rainfall Widget */}
-            {displayState && displayState !== 'India' && (
-              <RainfallWidget state={displayState} />
+            {effectiveState && effectiveState !== 'India' && (
+              <RainfallWidget state={effectiveState} />
             )}
           </div>
         </div>
