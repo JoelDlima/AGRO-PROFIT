@@ -15,8 +15,9 @@
 ## 🚀 Live Demo & Quick Access
 
 * **🌐 Production App**: [https://agro-profit-pro.vercel.app](https://agro-profit-pro.vercel.app)
+* **📱 Android APK (v1.2.0)**: [**Download AgroProfit-v1.2.0.apk**](apk/AgroProfit-v1.2.0.apk) *(17.8 MB native Android build)*
 * **⚡ Instant Demo Login**: Click **"Demo Login"** on the landing page or login screen to immediately explore pre-loaded crop portfolios, live mandi price comparison, and analytics without authentication.
-* **📱 Android Ready**: Fully responsive Progressive Web App (PWA) with native Android build support via Capacitor.
+* **📲 PWA & Native Ready**: Fully responsive Progressive Web App with offline caching and native Android APK.
 
 ---
 
