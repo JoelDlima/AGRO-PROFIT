@@ -32,7 +32,16 @@ export function RainfallWidget({ state }: RainfallWidgetProps) {
   }
 
   if (error || !data || data.records.length === 0) {
-    return null; // Silently fail if no data available
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Rainfall Data</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p role="status">Rainfall data is unavailable right now. Please try again later.</p>
+        </CardContent>
+      </Card>
+    );
   }
 
   // Use first district's data or average if multiple districts
@@ -91,7 +100,6 @@ export function RainfallWidget({ state }: RainfallWidgetProps) {
               return (
                 <div key={month.name} className="text-center">
                   <div className="h-16 flex items-end justify-center">
-                    {/* eslint-disable-next-line react/forbid-dom-props */}
                     <div 
                       className="w-full bg-blue-500 dark:bg-blue-600 rounded-t transition-all"
                       style={{ 

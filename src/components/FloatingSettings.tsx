@@ -14,26 +14,34 @@ const languages = [
 export default function FloatingSettings() {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, language, toggleTheme, setLanguage } = useTheme();
+  const labelsByLanguage = {
+    en: { settings: "Settings", close: "Close settings", theme: "Theme", light: "Light", dark: "Dark", language: "Language" },
+    hi: { settings: "सेटिंग्स", close: "सेटिंग्स बंद करें", theme: "थीम", light: "लाइट", dark: "डार्क", language: "भाषा" },
+    mr: { settings: "सेटिंग्ज", close: "सेटिंग्ज बंद करा", theme: "थीम", light: "लाइट", dark: "डार्क", language: "भाषा" },
+    kok: { settings: "सेटिंग्स", close: "सेटिंग्स बंद करात", theme: "थीम", light: "लाइट", dark: "डार्क", language: "भास" },
+  };
+  const labels = labelsByLanguage[language] || labelsByLanguage.en;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-[max(1rem,env(safe-area-inset-right))] z-50">
       {/* Settings Panel */}
       <div
+        id="floating-settings"
+        hidden={!isOpen}
         className={cn(
-          "absolute bottom-16 right-0 bg-card border border-border rounded-2xl shadow-2xl p-4 w-56 transition-all duration-300",
-          isOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
+          "absolute bottom-16 right-0 max-h-[70vh] w-60 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-xl border border-border bg-card p-4 shadow-xl"
         )}
       >
         <div className="flex items-center justify-between mb-4">
-          <span className="font-semibold text-foreground">Settings</span>
-          <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
+          <span className="font-semibold text-foreground">{labels.settings}</span>
+          <button type="button" aria-label={labels.close} onClick={() => setIsOpen(false)} className="flex h-11 w-11 items-center justify-center rounded-lg text-foreground hover:bg-muted">
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* Theme Toggle */}
         <div className="mb-4">
-          <span className="text-sm text-muted-foreground mb-2 block">Theme</span>
+          <span className="text-sm text-muted-foreground mb-2 block">{labels.theme}</span>
           <button
             onClick={toggleTheme}
             className="w-full flex items-center justify-between p-3 rounded-xl bg-muted hover:bg-muted/80 transition-colors"
@@ -44,7 +52,7 @@ export default function FloatingSettings() {
               ) : (
                 <Moon className="h-5 w-5 text-blue-400" />
               )}
-              <span className="text-sm font-medium">{theme === "light" ? "Light" : "Dark"}</span>
+              <span className="text-sm font-medium">{theme === "light" ? labels.light : labels.dark}</span>
             </span>
             <div
               className={cn(
@@ -66,15 +74,16 @@ export default function FloatingSettings() {
         <div>
           <span className="text-sm text-muted-foreground mb-2 flex items-center gap-1">
             <Languages className="h-4 w-4" />
-            Language
+            {labels.language}
           </span>
           <div className="space-y-1">
             {languages.map((lang) => (
               <button
                 key={lang.code}
+                aria-pressed={language === lang.code}
                 onClick={() => setLanguage(lang.code)}
                 className={cn(
-                  "w-full flex items-center gap-2 p-2 rounded-lg text-sm transition-colors",
+                  "w-full min-h-11 flex items-center gap-2 p-2 rounded-lg text-sm transition-colors",
                   language === lang.code
                     ? "bg-primary text-primary-foreground"
                     : "hover:bg-muted text-foreground"
@@ -91,11 +100,11 @@ export default function FloatingSettings() {
       {/* Floating Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? labels.close : labels.settings}
+        aria-expanded={isOpen}
+        aria-controls="floating-settings"
         size="icon"
-        className={cn(
-          "h-14 w-14 rounded-full shadow-lg transition-all duration-300",
-          isOpen ? "rotate-90 bg-destructive hover:bg-destructive/90" : "bg-primary hover:bg-primary/90"
-        )}
+        className="h-14 w-14 rounded-full bg-primary shadow-lg hover:bg-primary/90"
       >
         {isOpen ? <X className="h-6 w-6" /> : <Settings className="h-6 w-6" />}
       </Button>

@@ -1,3 +1,5 @@
+import { requireLiveService } from '@/lib/demoConfig';
+import { supabaseLiveEnabled } from '@/integrations/supabase/client';
 /**
  * Crop Health (Kindwise) API Service for AgroProfit
  * Calls crop.health via Supabase Edge Function (crophealth-detect)
@@ -6,7 +8,7 @@
  * crop.health combines identification + disease detection in ONE call
  */
 
-const CROPHEALTH_EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/crophealth-detect`;
+const CROPHEALTH_EDGE_FUNCTION_URL = `${import.meta.env.VITE_LIVE_SUPABASE_URL}/functions/v1/crophealth-detect`;
 
 export interface CropHealthResult {
   cropName: string;
@@ -29,7 +31,7 @@ async function imageToBase64(file: File): Promise<string> {
 
 /** Call crop.health Edge Function */
 async function callCropHealthEdgeFunction(base64Image: string): Promise<any> {
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  const supabaseKey = import.meta.env.VITE_LIVE_SUPABASE_PUBLISHABLE_KEY;
 
   const response = await fetch(CROPHEALTH_EDGE_FUNCTION_URL, {
     method: 'POST',
@@ -51,6 +53,7 @@ async function callCropHealthEdgeFunction(base64Image: string): Promise<any> {
 
 /** Analyze crop image for diseases using crop.health API (via Edge Function) */
 export async function detectCropHealth(imageFile: File): Promise<CropHealthResult> {
+  requireLiveService(supabaseLiveEnabled, 'Crop health');
   const base64Image = await imageToBase64(imageFile);
   console.log('[CropHealth] Image converted, length:', base64Image.length);
 

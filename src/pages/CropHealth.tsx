@@ -14,9 +14,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Upload, Camera, Loader2, AlertTriangle, CheckCircle2,
+  Camera, Loader2, AlertTriangle, CheckCircle2,
   Leaf, Bug, Shield, FlaskConical, Sprout, ChevronDown,
-  ChevronUp, Trash2, RotateCcw, History
+  ChevronUp, RotateCcw, History
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { detectCropDisease, type PlantIdResult } from "@/services/plantIdService";
@@ -28,7 +28,7 @@ type ScanProvider = 'plant_id' | 'crop_health';
 type ScanState = 'idle' | 'scanning' | 'diagnosing' | 'done' | 'error';
 
 export default function CropHealth() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { t, language } = useTheme();
 
   const [provider, setProvider] = useState<ScanProvider>('plant_id');
@@ -40,9 +40,10 @@ export default function CropHealth() {
   const [showTreatment, setShowTreatment] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  if (!user) return <Navigate to="/auth" replace />;
-
   const handleFileSelect = useCallback(async (file: File) => {
+    const userId = user?.id;
+    if (!userId) return;
+
     if (!file.type.startsWith('image/')) {
       setErrorMsg('Please select an image file (JPG, PNG, etc.)');
       return;
@@ -96,7 +97,7 @@ export default function CropHealth() {
           treatment_steps: [],
           ai_explanation: {},
           ai_language: language,
-        }, user.id);
+        }, userId);
       } catch (e) {
         console.warn('Failed to save scan history:', e);
       }
@@ -113,6 +114,9 @@ export default function CropHealth() {
     const file = e.dataTransfer.files?.[0];
     if (file) handleFileSelect(file);
   }, [handleFileSelect]);
+
+  if (loading) return <div role="status">Loading...</div>;
+  if (!user) return <Navigate to="/auth" replace />;
 
   const resetScan = () => {
     setScanState('idle');
@@ -158,6 +162,11 @@ export default function CropHealth() {
             </Button>
           </Link>
         </div>
+
+        <p className="mb-6 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm">
+          Results and treatment suggestions are advisory, not a substitute for professional agricultural advice.
+          Confirm the diagnosis, treatment, and dosage with a qualified local expert before applying anything.
+        </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Column - Upload */}
@@ -343,38 +352,30 @@ export default function CropHealth() {
                             </TabsTrigger>
                           </TabsList>
                           <TabsContent value="organic" className="mt-3 space-y-2">
-                            {diagnosis.treatment.organic.map((step, i) => (
+                            {diagnosis.treatment.organic.slice(0, 1).map((step, i) => (
                               <div key={i} className="flex gap-3 p-2 bg-green-500/5 rounded-lg">
                                 <div className="bg-green-500/20 text-green-400 rounded-full h-6 w-6 flex items-center justify-center text-xs font-bold shrink-0">
                                   {step.step}
                                 </div>
                                 <div>
                                   <p className="text-sm">{step.action}</p>
-                                  {step.timing && <p className="text-xs text-muted-foreground mt-0.5">⏰ {step.timing}</p>}
                                 </div>
                               </div>
                             ))}
                           </TabsContent>
                           <TabsContent value="chemical" className="mt-3 space-y-2">
-                            {diagnosis.treatment.chemical.map((step, i) => (
+                            {diagnosis.treatment.chemical.slice(0, 1).map((step, i) => (
                               <div key={i} className="flex gap-3 p-2 bg-amber-500/5 rounded-lg">
                                 <div className="bg-amber-500/20 text-amber-400 rounded-full h-6 w-6 flex items-center justify-center text-xs font-bold shrink-0">
                                   {step.step}
                                 </div>
                                 <div>
                                   <p className="text-sm">{step.action}</p>
-                                  {step.timing && <p className="text-xs text-muted-foreground mt-0.5">⏰ {step.timing}</p>}
                                 </div>
                               </div>
                             ))}
                           </TabsContent>
                         </Tabs>
-
-                        {/* Dosage */}
-                        <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
-                          <p className="text-sm font-medium text-purple-400 mb-1">💊 Dosage</p>
-                          <p className="text-sm">{diagnosis.dosage}</p>
-                        </div>
 
                         {/* Safety Tips */}
                         <div>

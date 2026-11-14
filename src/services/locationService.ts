@@ -1,3 +1,4 @@
+import { liveServicesEnabled } from '@/lib/demoConfig';
 /**
  * Location Service
  * Handles geolocation and distance calculations
@@ -20,51 +21,37 @@ export interface LocationData extends Coordinates {
  * Reverse geocode latitude and longitude to get city, district, state
  */
 export async function reverseGeocode(latitude: number, longitude: number): Promise<LocationData> {
-  try {
-    const res = await fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-    );
-    if (res.ok) {
-      const data = await res.json();
-      const city = data.city || data.locality || data.principalSubdivision;
-      const state = data.principalSubdivision;
-      const country = data.countryName || 'India';
-      const parts = [city, state].filter(Boolean);
-      const displayName = parts.length > 0 ? parts.join(', ') : 'Current Location';
-      return {
-        latitude,
-        longitude,
-        city,
-        district: city,
-        state,
-        country,
-        displayName,
-      };
-    }
-  } catch (err) {
-    console.warn('[Location] Reverse geocode network error, falling back to local lookup:', err);
-  }
-
-  // Fallback: find closest known Indian city/state by coordinates
-  let closestName = 'India';
-  let minDistance = Infinity;
-
-  for (const [name, coords] of Object.entries(INDIAN_LOCATIONS)) {
-    const d = calculateDistance(latitude, longitude, coords.latitude, coords.longitude);
-    if (d < minDistance) {
-      minDistance = d;
-      closestName = name;
+  if (liveServicesEnabled(import.meta.env)) {
+    try {
+      const res = await fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const city = data.city || data.locality || data.principalSubdivision;
+        const state = data.principalSubdivision;
+        const country = data.countryName || undefined;
+        const parts = [city, state].filter(Boolean);
+        const displayName = parts.length > 0 ? parts.join(', ') : 'Current Location';
+        return {
+          latitude,
+          longitude,
+          city,
+          district: city,
+          state,
+          country,
+          displayName,
+        };
+      }
+    } catch (err) {
+      console.warn('[Location] Reverse geocode network error:', err);
     }
   }
 
   return {
     latitude,
     longitude,
-    city: closestName,
-    district: closestName,
-    state: closestName,
-    country: 'India',
-    displayName: closestName,
+    displayName: 'Unknown location',
   };
 }
 

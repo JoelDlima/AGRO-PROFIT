@@ -25,7 +25,7 @@
 
     /* Muted earthy tones */
     --muted: 45 20% 90%;
-    --muted-foreground: 30 15% 45%;
+    --muted-foreground: 30 15% 35%;
 
     /* Golden Wheat Accent */
     --accent: 42 85% 55%;
@@ -87,7 +87,7 @@
     --secondary-foreground: 45 30% 95%;
 
     --muted: 30 15% 20%;
-    --muted-foreground: 45 15% 60%;
+    --muted-foreground: 45 15% 72%;
 
     --accent: 42 80% 50%;
     --accent-foreground: 30 20% 10%;
@@ -139,6 +139,59 @@
   button, input, select, textarea {
     font-family: inherit;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+}
+
+/* A compact market-board header: all destinations stay available on small screens. */
+.market-nav {
+  background: hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--border));
+  box-shadow: 0 2px 8px hsl(var(--foreground) / 0.06);
+}
+
+.market-nav-rail {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 0.25rem 0 0.5rem;
+  scrollbar-width: thin;
+}
+
+.market-nav-link {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0.5rem 0.85rem;
+  border-radius: 0.5rem;
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.market-nav-link:hover {
+  background: hsl(var(--muted));
+}
+
+.market-nav-link-active,
+.market-nav-link-active:hover {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

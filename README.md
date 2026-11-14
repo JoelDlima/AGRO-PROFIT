@@ -1,228 +1,135 @@
-# 🌾 AgroProfit Pro: AI-Powered Mandi Intelligence & Profit Optimization
+# AgroProfit: farmer-first market information
 
-[![Live Production](https://img.shields.io/badge/Live%20Demo-agro--profit--pro.vercel.app-brightgreen?style=for-the-badge&logo=vercel)](https://agro-profit-pro.vercel.app)
-[![Version](https://img.shields.io/badge/Release-v1.2.0-blue?style=for-the-badge)](https://github.com/JoelDlima/AGRO-PROFIT/releases)
-[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL%20%7C%20pg__cron-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
-[![Groq AI](https://img.shields.io/badge/Groq%20AI-Llama%203.3%2070B-F55036?style=for-the-badge)](https://groq.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+AgroProfit is a React and TypeScript application for exploring crop and mandi
+information. This directory is an **isolated redesign in progress**; it was
+exported from the original `AGRO-PROFIT` checkout without changing that
+checkout or copying `.env.example`.
 
-> **Empowering 146 million Indian farmers with real-time Agmarknet mandi price arbitrage, GPS distance logistics, and vernacular AI advisory to eliminate middlemen exploitation.**
+## Important: preview data is not a market quote
 
----
+The redesign is being prepared to work without old credentials. Any example
+prices must be labeled **sample data**, not “live”. A price observation should
+include its commodity, market, unit, source and observation date when available.
+Confirm the current price with the actual market before travelling or selling.
+Straight-line distance is not a driving route; estimates are not guaranteed
+earnings or agricultural advice.
 
-## 🚀 Live Demo & Quick Access
+Live Supabase, government data feeds, weather and AI integrations have **not**
+been verified in this workspace. Do not provide or paste old API keys. Never put
+secret/service-role keys in browser code or `VITE_` environment variables. Do
+not deploy this preview or apply database migrations to a real project without a
+separate security and data-policy review.
 
-* **🌐 Production App**: [https://agro-profit-pro.vercel.app](https://agro-profit-pro.vercel.app)
-* **📱 Android APK (v1.2.0)**: [**Download AgroProfit-v1.2.0.apk**](apk/AgroProfit-v1.2.0.apk) *(17.8 MB native Android build)*
-* **⚡ Instant Demo Login**: Click **"Demo Login"** on the landing page or login screen to immediately explore pre-loaded crop portfolios, live mandi price comparison, and analytics without authentication.
-* **📲 PWA & Native Ready**: Fully responsive Progressive Web App with offline caching and native Android APK.
+## Preview
 
----
+These are screenshots of the local redesign preview, not a live service. The
+landing page offers **Explore sample data**, which starts a demo session and
+opens the dashboard. The mobile dashboard shows example crops and a sample-price
+warning; its prices are not current or necessarily specific to the chosen crop.
 
-## 🎯 The Problem: Information Asymmetry & Distress Sales
+### Landing page — desktop
 
-Indian agriculture faces a structural market opacity challenge that deprives farmers of their rightful income:
+![Desktop landing page with the Explore sample data button and price-context checklist](docs/readme-assets/landing-desktop.png)
 
-* **86.2% Small & Marginal Farmers Trapped**: According to the Agricultural Census, 86.2% of Indian farmers cultivate operational holdings under 2 hectares, lacking the leverage and market visibility to negotiate fair prices.
-* **20% to 45% Same-Day Price Disparity**: Official Agmarknet data reveals that APMC mandis separated by just 30 to 60 km frequently exhibit price variations of **₹400 to ₹1,200 per quintal** on the exact same day for the same crop (e.g., Tomato selling at ₹1,200/q in one district APMC vs ₹2,100/q 45 km away).
-* **Middlemen Pocket 35% to 60% Margin**: As documented in the Dalwai Committee Report on Doubling Farmers' Income and RBI food inflation studies, commission agents (*arhtiyas*) and intermediaries capture up to 60% of the consumer rupee for perishables.
-* **₹1,52,000+ Crore ($18B) Annual Distress Loss**: Over ₹1.52 Lakh Crore is lost annually due to distress selling at farm-gate prices and lack of freight-conscious market linkage (CIPHET / MoFPI data).
-* **The Core Gap**: While over 350 million rural Indians now possess 4G/5G smartphones, existing government portals are desktop-oriented, slow, English-heavy, and fail to answer the farmer's fundamental question:  
-  > *"Which mandi gives me the highest **NET** profit after deducting diesel, tractor hauling, and APMC cess?"*
+### Landing page — mobile
 
----
+![Mobile landing page with the Explore sample data button and preview disclaimer](docs/readme-assets/landing-mobile.png)
 
-## 💡 The Solution: AgroProfit Pro
+### Demo dashboard — mobile
 
-AgroProfit Pro delivers a farmer-first, mobile-optimized intelligence suite that transforms volatile agricultural data into immediate, profitable decisions.
+![Mobile demo dashboard showing example crops and a sample-price warning](docs/readme-assets/dashboard-mobile.png)
 
-### ✨ Key Features
+### Sample-data flow — mobile
 
-1. **Hyperlocal Mandi Discovery with GPS Distance Sorting**:
-   * Automatically captures GPS coordinates and calculates real driving distances to all surrounding APMC mandis using high-precision Haversine math.
-   * Toggle between **"Nearest First"** or **"Highest Price First"** with color-coded badges (Highest, Average, Lowest).
-2. **Net Profit & Freight Calculator**:
-   * Computes true take-home earnings:  
-     $$\text{Net Profit} = \text{Gross Mandi Payout} - (\text{Distance} \times \text{Freight Cost/km} + \text{APMC Cess} + \text{Mandi Fees})$$
-   * Eliminates the risk of travelling to a distant market only to lose money on diesel and tolls.
-3. **15-Day Historical Price Trends & Analytics**:
-   * Interactive charts (powered by Recharts) showing commodity price trajectories, 15-day moving averages, and arrival volumes to help farmers time harvest sales.
-4. **Automated 3-Hour Background Mandi Sync (`pg_cron` + `pg_net`)**:
-   * Queries 1,135+ live records from Supabase in **< 180ms**, shielding farmers from slow 8+ second government API roundtrips.
-   * Background cron job continuously refreshes 12 staple crops every 3 hours.
-5. **Vernacular Multilingual Interface**:
-   * Complete native localization for **English, Hindi (हिंदी), Marathi (मराठी), and Konkani (कोंकणी)** with seamless dynamic language switching.
-6. **AI Agronomist & Advisory Chatbot**:
-   * Powered by **Llama 3.3 70B** (Groq Cloud AI) with localized agricultural prompt engineering for concise crop disease detection, weather advisories, and harvest guidance.
-7. **Farmer Community Forum**:
-   * Peer-to-peer knowledge exchange with crop-specific tagging, discussions, and upvotes.
+The animation is assembled from the three actual screenshots above plus the price comparison screen.
+Every price shown is synthetic and labeled as such; the flow is a UI preview, not a market feed.
 
----
+![Animated mobile flow from the landing page to the demo dashboard and price comparison](docs/readme-assets/demo-flow.gif)
 
-## 🏗️ System Implementation Architecture
+### Price comparison — mobile
+
+![Mobile price comparison with synthetic demo label, per-quintal unit and no report date](docs/readme-assets/prices-mobile.png)
+
+### Calculator — mobile
+
+The unit conversion is part of the tested logic: one quintal is 100 kg, so ₹20/kg is ₹2,000 per
+quintal. The result is labeled an estimate; fees, quality and market changes are not included.
+
+![Mobile calculator showing one quintal at twenty rupees per kilogram and an estimated total of two thousand rupees](docs/readme-assets/calculator-mobile.png)
+
+## How the preview is organized
+
+The diagram describes the preview path in the source, not a verified production
+deployment. `App.tsx` selects the web or native router and provides the shared
+auth, theme and query contexts. The dashboard uses example data and can request
+market data through a gated hook.
 
 ```mermaid
 flowchart TD
-    subgraph CLIENT["1. Farmer Client Layer (Web / Android)"]
-        UI["React 18 + Vite Web App & Capacitor Android"]
-        GPS["Device GPS Location (Lat/Long)"]
-        LANG["Vernacular Engine (EN, HI, MR, KOK)"]
-        CALC["Freight & Net Profit Calculator"]
-        UI --- GPS
-        UI --- LANG
-        UI --- CALC
-    end
-
-    subgraph EDGE["2. Serverless Edge API Layer (Vercel)"]
-        MANDI_API["/api/mandi (Read & Fast Cache Proxy)"]
-        SYNC_API["/api/sync (Batch Cron Sync Engine)"]
-        WEATHER_API["/api/weather & /api/rainfall"]
-        AI_ROUTER["AI Advisory Router (Groq Llama 3.3 70B)"]
-    end
-
-    subgraph DB["3. Database & Automation (Supabase)"]
-        CRON["pg_cron (3-Hour Automated Schedule)"]
-        PG_NET["pg_net (HTTP Dispatcher)"]
-        CACHE_DB[("mandi_prices_cache Table (1,135+ Live Mandis)")]
-        HIST_DB[("price_history Table (15-Day Trends)")]
-        AUTH_DB[("Profiles & Secure Storage")]
-
-        CRON -->|Every 3 Hours| PG_NET
-    end
-
-    subgraph EXT["4. External Services & Government Gateways"]
-        GOV["Government of India Agmarknet (api.data.gov.in)"]
-        GROQ["Groq Cloud AI (LPU Inference Engine)"]
-    end
-
-    %% Client Interactions
-    UI -->|1. Request Mandi Data| MANDI_API
-    UI -->|Ask Farming Advisory| AI_ROUTER
-    UI -->|Get Weather & Forecasts| WEATHER_API
-
-    %% Mandi Read Flow (Sub-200ms)
-    MANDI_API -->|Check 3h Cache| CACHE_DB
-    CACHE_DB -.->|Cache Hit < 200ms| MANDI_API
-    MANDI_API -.->|Fast Response| UI
-
-    %% Cache Miss Fallback
-    MANDI_API -->|On Cache Miss/Stale| GOV
-
-    %% Background Cron Sync Flow
-    PG_NET -->|Invoke Trigger| SYNC_API
-    SYNC_API -->|Fetch 12 Staple Crops| GOV
-    SYNC_API -->|Bulk Upsert Live Mandis| CACHE_DB
-    SYNC_API -->|Append Historical Trends| HIST_DB
-
-    %% AI Advisory Flow
-    AI_ROUTER -->|Agricultural Prompts| GROQ
-    GROQ -.->|Streamed Response| AI_ROUTER
-    AI_ROUTER -.->|Localized Advice| UI
+    User["Visitor"] --> Landing["Landing page"]
+    Landing -->|"Explore sample data"| Demo["Demo session"]
+    Demo --> Dashboard["Dashboard"]
+    Dashboard --> Mock["Example crops and markets<br/>src/data/mockData.ts"]
+    Dashboard --> Hook["Market-price query<br/>useMandiPrices"]
+    Hook --> Gate{"Live services enabled<br/>at build time?"}
+    Gate -->|"No: default preview"| Disabled["Live market query disabled"]
+    Gate -->|"Yes: unverified"| Services["Market cache and data services"]
 ```
 
----
+Live integrations are disabled by default unless
+`VITE_ENABLE_LIVE_SERVICES` is explicitly set to `true` at build time. The
+inherited server routes are disabled in the preview. Enabling the flag does not
+verify Supabase, government feeds, weather, AI, or any other integration, nor
+does it make this preview safe to deploy.
 
-## 📊 Feasibility, Scalability & Socio-Economic Impact
+For any price decision, follow the context shown on the landing page rather
+than treating the examples as a quote:
 
-| Metric / Dimension | AgroProfit Pro Implementation |
-| :--- | :--- |
-| **Farmer Net Income Boost** | **+15% to 28% increase** in realized harvest revenue via multi-mandi price arbitrage. |
-| **Operational Query Cost** | **< ₹0.08 ($0.001) per farmer query** running on serverless edge compute and Supabase micro-tiers. |
-| **Response Latency** | Reduced from **8.2s (Govt API)** to **< 180ms** via Supabase 3-hour cache. |
-| **Concurrency Capacity** | 100,000+ monthly active farmers supported with zero cold-start crashes. |
-| **Target Demographics** | 146M Small & Marginal Farmers, 10,000+ FPOs, and rural freight operators. |
-
----
-
-## 🛠️ Tech Stack
-
-* **Frontend**: React 18, Vite, TypeScript, Tailwind CSS, shadcn/ui, Lucide Icons, Recharts, TanStack Query.
-* **Serverless Backend**: Vercel Serverless Functions (`/api/mandi`, `/api/sync`, `/api/weather`, `/api/rainfall`).
-* **Database & Auth**: Supabase (PostgreSQL 15, Row Level Security, `pg_cron`, `pg_net`, Storage).
-* **AI & Machine Learning**: Groq Cloud LPUs running **Llama 3.3 70B Versatile**.
-* **Mobile Runtime**: Capacitor 8 (Android SDK wrapper for native APK generation).
-
----
-
-## ⚙️ Getting Started & Local Development
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/JoelDlima/AGRO-PROFIT.git
-cd AGRO-PROFIT
+```mermaid
+flowchart LR
+    Crop["Choose a crop"] --> Compare["Compare market, price,<br/>unit and observation date"]
+    Compare --> Costs["Consider transport<br/>and other costs"]
+    Costs --> Confirm["Confirm the current rate<br/>with the actual market"]
 ```
 
-### 2. Install Dependencies
-```bash
-npm install
+## What is verified
+
+| Check | Latest recorded result | What it does not prove |
+| --- | --- | --- |
+| `npm test` | 77 passed | Many checks inspect source; they are not full browser tests |
+| `npm run typecheck` | passed | Types do not prove runtime behavior |
+| `npm run build` | passed with `VITE_*` cleared | A build does not validate live integrations |
+| Local mobile preview | 390px, nine routes, no observed overflow, console errors or external requests | Not a physical device or screen-reader audit |
+| `npm run lint` | **fails:** 87 errors, 13 warnings | Remaining issues are not all classified as inherited or introduced |
+| Live services | disabled by default | Supabase, agmarknet, weather, AI and RLS remain unverified |
+
+See [`VERIFICATION.md`](VERIFICATION.md) for commands, dates and limitations.
+
+## Working locally
+
+Requirements observed for this development session: Node.js 24 and npm. From
+this directory, an authorized local install was run with lifecycle scripts
+disabled:
+
+```sh
+npm ci --ignore-scripts --no-audit --no-fund
 ```
 
-### 3. Configure Environment Variables
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
-Fill in your API credentials in `.env`:
-```env
-# Supabase Configuration
-VITE_SUPABASE_URL=https://your-project-id.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_anon_key
-VITE_SUPABASE_ANON_KEY=your_supabase_publishable_anon_key
+Run `npm test`, `npm run typecheck`, and `npm run build` for local checks.
+Run `npm run preview -- --host 127.0.0.1` to preview a production build.
+Repository-wide lint currently fails; see [`VERIFICATION.md`](VERIFICATION.md)
+for the observed results and limitations. The install may need internet access.
+Do not assume an API or database is available elsewhere.
 
-# Government of India Mandi Data API (data.gov.in)
-VITE_DATA_GOV_API_KEY=your_data_gov_in_api_key
-DATA_GOV_API_KEY=your_data_gov_in_api_key
+## Read next
 
-# Groq Cloud AI Service
-VITE_GROQ_API_KEY=your_groq_api_key
-VITE_GROQ_MODEL=openai/gpt-oss-20b
+- [`DESIGN.md`](DESIGN.md): audience, visual direction and safety constraints.
+- [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md): scoped implementation and
+  verification work.
+- [`RESEARCH.md`](RESEARCH.md): source snapshot, product sources and known risks.
+- [`docs/LEGACY_README.md`](docs/LEGACY_README.md): preserved historical README;
+  its claims are not evidence for this redesign.
 
-# Weather Services (Optional - Open-Meteo works without a key)
-VITE_OPENWEATHER_API_KEY=your_openweather_api_key
-```
-
-### 4. Setup Database Schema
-1. Open your Supabase Dashboard → **SQL Editor**.
-2. Run `supabase/COMPLETE_SCHEMA.sql` to generate all tables, RLS policies, indexes, and triggers.
-3. Run `supabase/cron_sync.sql` to activate the automated 3-hour mandi sync background job (`pg_cron`).
-
-### 5. Run the Local Development Server
-```bash
-npm run dev
-```
-Open [http://localhost:8080](http://localhost:8080) (or `http://localhost:5173`) in your browser.
-
-### 6. Build for Production
-```bash
-npm run build
-```
-
----
-
-## 📱 Mobile Build (Android via Capacitor)
-
-```bash
-# Build web assets and sync with native Android wrapper
-npm run cap:build
-
-# Open native Android Studio project
-npm run cap:open
-```
-
----
-
-## 🗺️ Future Roadmap
-
-- [ ] **FPO Pooled Freight Dispatch**: Multi-farmer logistics aggregation to split truck costs to distant metro mandis.
-- [ ] **e-NAM Integration**: Direct digital bidding and electronic trade settlement.
-- [ ] **Voice-First Interaction**: Integration with Bhashini AI voice pipeline and Twilio WhatsApp bot for illiterate farmers.
-- [ ] **Computer Vision Leaf Scanner**: On-device pest and disease diagnosis using leaf photography.
-- [ ] **Warehouse Receipts & Micro-Finance**: Connecting farmers with WDRA-accredited cold stores to secure loans against unsold stock.
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+The existing routes for markets, calculator, profile, crop health, forum, chat,
+resources and exports are under review. A route existing in source does not
+establish that it works end to end without the necessary services.

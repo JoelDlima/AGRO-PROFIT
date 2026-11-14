@@ -9,58 +9,15 @@ import {
   User, 
   Sparkles,
   Loader2,
-  Mic,
-  RefreshCw,
-  TrendingUp,
-  BarChart3,
-  Truck
+  Mic
 } from "lucide-react";
 import { chatSuggestions } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 import { sendChatMessage } from "@/services/groqService";
 import { useTheme } from "@/hooks/useTheme";
-import { getMarketRecommendation, getPricePrediction } from "@/services/aiRecommendationService";
 
 const CHAT_STORAGE_KEY = "agroprofit-chat-history";
 
-// Structured markdown formatter for crisp, well-formatted responses
-function formatMarkdown(text: string): string {
-  if (!text) return "";
-
-  const lines = text.split("\n");
-  const formattedLines = lines.map((line) => {
-    const trimmed = line.trim();
-    if (trimmed.startsWith("### ")) {
-      return `<h3 class="text-sm font-bold text-primary mt-2 mb-1">${trimmed.slice(4)}</h3>`;
-    }
-    if (trimmed.startsWith("## ")) {
-      return `<h2 class="text-base font-bold text-primary mt-2.5 mb-1">${trimmed.slice(3)}</h2>`;
-    }
-    if (trimmed.startsWith("# ")) {
-      return `<h1 class="text-base font-bold text-primary mt-3 mb-1.5">${trimmed.slice(2)}</h1>`;
-    }
-    if (/^[•\-\*]\s+/.test(trimmed)) {
-      const itemText = trimmed.replace(/^[•\-\*]\s+/, "");
-      return `<div class="flex items-start gap-2 my-1 leading-relaxed"><span class="text-primary font-bold select-none">•</span><span class="flex-1">${itemText}</span></div>`;
-    }
-    if (/^\d+\.\s+/.test(trimmed)) {
-      const match = trimmed.match(/^(\d+\.)\s+(.*)/);
-      if (match) {
-        return `<div class="flex items-start gap-2 my-1 leading-relaxed"><span class="text-primary font-semibold select-none">${match[1]}</span><span class="flex-1">${match[2]}</span></div>`;
-      }
-    }
-    return trimmed;
-  });
-
-  let html = formattedLines.join("\n");
-  html = html
-    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-foreground">$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
-    .replace(/\n\n+/g, '<div class="h-2"></div>')
-    .replace(/\n/g, '<br/>');
-
-  return html;
-}
 import { getCurrentWeather, formatWeatherForChatbot } from "@/services/weatherService";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useToast } from "@/hooks/use-toast";
@@ -108,13 +65,24 @@ export default function Chatbot() {
   const { profile } = useUserProfile();
   const { toast } = useToast();
   const { t, language } = useTheme();
-  const [weatherData, setWeatherData] = useState<any>(null);
+  const [weatherUnavailable, setWeatherUnavailable] = useState(false);
 
   // Fetch weather data on mount
   useEffect(() => {
+    let active = true;
+    setWeatherUnavailable(false);
     if (profile?.state) {
-      getCurrentWeather(profile.state).then(setWeatherData);
+      getCurrentWeather(profile.state)
+        .then((weather) => {
+          if (active) {
+            setWeatherUnavailable(!weather);
+          }
+        })
+        .catch(() => {
+          if (active) setWeatherUnavailable(true);
+        });
     }
+    return () => { active = false; };
   }, [profile?.state]);
 
   const handleScroll = () => {
@@ -221,9 +189,17 @@ export default function Chatbot() {
       // Fetch weather data if user has a state
       let weatherContext = "";
       if (profile?.state) {
-        const weather = await getCurrentWeather(profile.state);
-        if (weather) {
-          weatherContext = formatWeatherForChatbot(profile.state, weather);
+        try {
+          const weather = await getCurrentWeather(profile.state);
+          weatherContext = weather
+            ? formatWeatherForChatbot(profile.state, weather)
+            : "Weather data is unavailable. Do not assume current weather conditions.";
+          if (!weather) {
+            setWeatherUnavailable(true);
+          }
+        } catch (error) {
+          weatherContext = "Weather data is unavailable. Do not assume current weather conditions.";
+          setWeatherUnavailable(true);
         }
       }
 
@@ -309,134 +285,18 @@ export default function Chatbot() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Left Column: AI Market Intelligence */}
           <div className="lg:col-span-1 space-y-4">
             <Card className="border-primary/20">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-primary" />
-                  {t("ai.marketIntelligence")}
-                </CardTitle>
+              <CardHeader>
+                <CardTitle className="text-base">Market recommendations</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                {profile?.crops && profile.crops.length > 0 ? (
-                  <>
-                    {profile.crops.slice(0, 3).map((cropName, idx) => {
-                      const recommendation = getMarketRecommendation(
-                        cropName, 
-                        100, 
-                        profile?.state || 'Maharashtra',
-                        weatherData?.description?.toLowerCase().includes('rain') ? 'rainy' : 'sunny'
-                      );
-                      const prediction = getPricePrediction(cropName);
-                      
-                      // Get translated crop name
-                      const getCropDisplayName = (crop: string) => {
-                        const cropKey = `crop.${crop.toLowerCase()}`;
-                        const translated = t(cropKey);
-                        return translated !== cropKey ? translated : crop;
-                      };
-                      
-                      return (
-                        <div key={idx} className="p-3 rounded-lg border bg-card/50 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="font-semibold text-sm">{getCropDisplayName(cropName)}</span>
-                            <div className={cn("text-xs px-2 py-0.5 rounded-full", {
-                              "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400": prediction.trend === 'rising',
-                              "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400": prediction.trend === 'falling',
-                              "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400": prediction.trend === 'stable',
-                            })}>
-                              {prediction.trend === 'rising' ? `📈 ${t("ai.rising")}` : prediction.trend === 'falling' ? `📉 ${t("ai.falling")}` : `➡️ ${t("ai.stable")}`}
-                            </div>
-                          </div>
-                          
-                          <div className="text-xs space-y-1">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">{t("ai.current")}:</span>
-                              <span className="font-semibold">₹{recommendation.currentPrice.toFixed(2)}/kg</span>
-                            </div>
-                            {recommendation.predictedPrice && (
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">{t("ai.in3d")}:</span>
-                                <span className="font-semibold text-green-600 dark:text-green-400">₹{recommendation.predictedPrice.toFixed(2)}/kg</span>
-                              </div>
-                            )}
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">{t("ai.bestMarket")}:</span>
-                              <span className="font-semibold truncate max-w-[120px]">{recommendation.bestMarket.split(' ')[0]}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">{t("ai.transport")}:</span>
-                              <span className="font-semibold text-orange-600 dark:text-orange-400">₹{recommendation.transportCost}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">{t("ai.netProfit")}:</span>
-                              <span className="font-semibold text-green-600 dark:text-green-400">₹{recommendation.netProfit?.toFixed(0)}</span>
-                            </div>
-                          </div>
-                          
-                          <div className={cn("text-[10px] p-2 rounded", {
-                            "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400": recommendation.action === 'wait',
-                            "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400": recommendation.action === 'sell_now',
-                            "bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400": recommendation.action === 'sell_specific_market',
-                          })}>
-                            {recommendation.action === 'wait' && `⏳ ${t("ai.waitForBetterPrices")}`}
-                            {recommendation.action === 'sell_now' && `⚡ ${t("ai.sellImmediately")}`}
-                            {recommendation.action === 'sell_specific_market' && `📊 ${t("ai.sellAtRecommended")}`}
-                          </div>
-                        </div>
-                      );
-                    })}
-                    
-                    <div className="text-xs text-center text-muted-foreground pt-2 border-t">
-                      <div className="flex items-center justify-center gap-1">
-                        <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                        <span>{t("ai.confidence")}: 85-90%</span>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center text-sm text-muted-foreground py-4">
-                    <p>{t("ai.addCropsForRecommendations")}</p>
-                    <Button variant="outline" size="sm" className="mt-2" onClick={() => window.location.href = '/profile'}>
-                      {t("ai.goToProfile")}
-                    </Button>
-                  </div>
+              <CardContent className="space-y-3 text-sm">
+                <p role="status">Recommendations are unavailable. Check official sources for current market prices and advice before making decisions.</p>
+                {weatherUnavailable && (
+                  <p role="status">Weather data is unavailable right now.</p>
                 )}
               </CardContent>
             </Card>
-            
-            {/* 7-Day Price Forecast */}
-            {profile?.crops && profile.crops.length > 0 && (
-              <Card className="border-primary/20">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <BarChart3 className="h-4 w-4 text-primary" />
-                    {t("ai.7dayForecast")}
-                  </CardTitle>
-                  <p className="text-xs text-muted-foreground">{profile.crops[0]}</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {getPricePrediction(profile.crops[0]).predictedPrices.slice(0, 7).map((p, idx) => (
-                      <div key={idx} className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">
-                          {new Date(p.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold">₹{p.price}/kg</span>
-                          <span className={cn("text-[10px]", 
-                            p.change > 0 ? "text-green-600 dark:text-green-400" : 
-                            p.change < 0 ? "text-red-600 dark:text-red-400" : "text-gray-600 dark:text-gray-400")}>
-                            {p.change > 0 ? '▲' : p.change < 0 ? '▼' : '●'} {Math.abs(p.change)}%
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
           </div>
 
           {/* Right Column: Chat Interface */}
@@ -490,18 +350,9 @@ export default function Chatbot() {
                       ? "bg-muted text-foreground rounded-tl-sm" 
                       : "bg-primary text-primary-foreground rounded-tr-sm"
                   )}>
-                    <div className={cn(
-                          "text-sm leading-relaxed max-w-none",
-                          message.role === "assistant" 
-                            ? "prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-1.5" 
-                            : "whitespace-pre-wrap"
-                        )} 
-                         dangerouslySetInnerHTML={{ 
-                           __html: message.role === "assistant" 
-                             ? formatMarkdown(message.content)
-                             : message.content 
-                         }} 
-                    />
+                    <div className="text-sm leading-relaxed max-w-none whitespace-pre-wrap">
+                      {message.content}
+                    </div>
                     <p className={cn(
                       "text-[10px] mt-2",
                       message.role === "assistant" ? "text-muted-foreground" : "text-primary-foreground/70"
@@ -571,97 +422,6 @@ export default function Chatbot() {
           {t("chatbot.disclaimer")}
         </p>
         
-        {/* Transport & Mandi Comparison - Side by Side Below Chat */}
-        {profile?.crops && profile.crops.length > 0 && (
-          <div className="grid md:grid-cols-2 gap-4 mt-4">
-            {/* Transport Cost Analysis */}
-            <Card className="border-primary/20">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-primary" />
-                  {t("ai.transportCostAnalysis")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {(() => {
-                  const rec = getMarketRecommendation(profile.crops[0], 100, profile?.state || 'Maharashtra');
-                  return (
-                    <div className="space-y-3 text-sm">
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="p-3 bg-muted/50 rounded-lg">
-                          <div className="text-muted-foreground text-xs mb-1">{t("ai.bestMarket")}</div>
-                          <div className="font-semibold text-sm">{rec.bestMarket}</div>
-                        </div>
-                        <div className="p-3 bg-muted/50 rounded-lg">
-                          <div className="text-muted-foreground text-xs mb-1">{t("ai.distance")}</div>
-                          <div className="font-semibold">{rec.alternativeMarkets?.[0]?.distance || '45 km'}</div>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-center">
-                          <div className="font-bold text-orange-600 dark:text-orange-400 text-lg">₹{rec.transportCost}</div>
-                          <div className="text-muted-foreground text-xs">{t("ai.transportCost")}</div>
-                        </div>
-                        <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-center">
-                          <div className="font-bold text-green-600 dark:text-green-400 text-lg">₹{rec.netProfit?.toFixed(0)}</div>
-                          <div className="text-muted-foreground text-xs">{t("ai.netProfit")}</div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </CardContent>
-            </Card>
-            
-            {/* Mandi Comparison with Reasoning */}
-            <Card className="border-primary/20">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-primary" />
-                  {t("ai.mandiComparison")}
-                </CardTitle>
-                <p className="text-xs text-muted-foreground">{profile.crops[0]} - 100kg</p>
-              </CardHeader>
-              <CardContent>
-                {(() => {
-                  const rec = getMarketRecommendation(profile.crops[0], 100, profile?.state || 'Maharashtra');
-                  return (
-                    <div className="space-y-2">
-                      {/* Best Market Highlight */}
-                      <div className="p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-green-700 dark:text-green-400">🏆 {rec.bestMarket}</span>
-                          <span className="text-green-600 dark:text-green-400 font-bold text-sm">₹{rec.currentPrice}/kg</span>
-                        </div>
-                      </div>
-                      
-                      {/* Alternative Markets */}
-                      {rec.alternativeMarkets?.slice(0, 2).map((market, idx) => (
-                        <div key={idx} className="p-2 bg-muted/30 rounded-lg text-xs flex justify-between items-center">
-                          <span className="font-medium">{market.name}</span>
-                          <span className={market.profitDifference > 0 ? "text-green-600" : "text-red-600"}>
-                            {market.profitDifference > 0 ? '+' : ''}{market.profitDifference.toFixed(0)}%
-                          </span>
-                        </div>
-                      ))}
-                      
-                      {/* AI Reasoning */}
-                      <div className="p-2 bg-primary/5 border border-primary/20 rounded-lg mt-2">
-                        <div className="flex items-center gap-1 mb-1">
-                          <Sparkles className="h-3 w-3 text-primary" />
-                          <span className="text-[10px] font-semibold text-primary">{t("ai.aiReasoning")}</span>
-                        </div>
-                        <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-3">
-                          {rec.reasoning}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </CardContent>
-            </Card>
-          </div>
-        )}
           </div>
         </div>
       </div>

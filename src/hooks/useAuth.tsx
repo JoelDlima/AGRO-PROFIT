@@ -3,7 +3,45 @@ import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { Capacitor } from "@capacitor/core";
 import { App, URLOpenListenerEvent } from "@capacitor/app";
-import { crops } from "@/data/mockData";
+import type { UserProfile } from "./useUserProfile";
+
+export function readDemoProfile(stored: string | null, id: string): UserProfile {
+  const defaults: UserProfile = {
+    id,
+    full_name: 'Demo Farmer',
+    phone: '+919876543210',
+    state: 'Maharashtra',
+    crops: ['Tomato', 'Onion', 'Potato'],
+    preferred_language: 'en',
+    onboarding_completed: true,
+  };
+  if (!stored) return defaults;
+
+  try {
+    const value: unknown = JSON.parse(stored);
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return defaults;
+    const saved = value as Record<string, unknown>;
+    const text = (key: keyof UserProfile) =>
+      typeof saved[key] === 'string' || saved[key] === null
+        ? saved[key] as string | null
+        : defaults[key] as string | null;
+    return {
+      id,
+      full_name: text('full_name'),
+      phone: text('phone'),
+      state: text('state'),
+      crops: Array.isArray(saved.crops) && saved.crops.every(crop => typeof crop === 'string')
+        ? saved.crops
+        : defaults.crops,
+      preferred_language: text('preferred_language'),
+      onboarding_completed: typeof saved.onboarding_completed === 'boolean' || saved.onboarding_completed === null
+        ? saved.onboarding_completed as boolean | null
+        : defaults.onboarding_completed,
+    };
+  } catch {
+    return defaults;
+  }
+}
 
 // Helper to detect if running in Capacitor native app
 const isNativeApp = () => Capacitor.isNativePlatform();
@@ -86,7 +124,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Handle deep links for OAuth callback in native app
     if (isNativeApp()) {
       App.addListener('appUrlOpen', async (event: URLOpenListenerEvent) => {
-        console.log('[Auth] Deep link received:', event.url);
         
         // Handle OAuth callback - extract tokens from URL
         const url = new URL(event.url);
@@ -100,7 +137,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const refreshToken = hashParams.get('refresh_token');
             
             if (accessToken) {
-              console.log('[Auth] Setting session from deep link tokens');
               await supabase.auth.setSession({
                 access_token: accessToken,
                 refresh_token: refreshToken || '',
@@ -121,7 +157,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithGoogle = async () => {
     const redirectUrl = getRedirectUrl();
-    console.log('[Auth] Starting Google OAuth with redirect:', redirectUrl);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -187,16 +222,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       refresh_token: 'demo-refresh-token',
     } as unknown as Session;
 
-    const allCropNames = crops.map((c) => c.name);
-    const demoProfile = {
-      id: demoUser.id,
-      full_name: 'Demo Farmer',
-      phone: '+919876543210',
-      state: 'Maharashtra',
-      crops: allCropNames,
-      preferred_language: 'en',
-      onboarding_completed: true,
-    };
+    const demoProfile = readDemoProfile(localStorage.getItem('demo_profile'), demoUser.id);
 
     localStorage.setItem('demo_profile', JSON.stringify(demoProfile));
     localStorage.setItem('mock_user', JSON.stringify(demoUser));

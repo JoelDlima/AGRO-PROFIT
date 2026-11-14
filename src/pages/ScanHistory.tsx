@@ -6,7 +6,6 @@
 import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useAuth } from "@/hooks/useAuth";
-import { useTheme } from "@/hooks/useTheme";
 import { Navigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,26 +27,59 @@ import {
   clearScanHistory,
   type ScanRecord,
 } from "@/services/scanHistoryService";
+import { safeScanImageUrl } from "@/lib/scanImageSafety";
+
+function ScanImage({ imageUrl, alt, detail = false }: { imageUrl: string; alt: string; detail?: boolean }) {
+  const [preview, setPreview] = useState<{ source: string; url: string | null } | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    let createdUrl: string | null = null;
+    setFailed(false);
+    void safeScanImageUrl(imageUrl, window.location.origin).then(url => {
+      if (url && url !== imageUrl && url.startsWith("blob:")) createdUrl = url;
+      if (active) setPreview({ source: imageUrl, url });
+      else if (createdUrl) URL.revokeObjectURL(createdUrl);
+    });
+    return () => {
+      active = false;
+      if (createdUrl) URL.revokeObjectURL(createdUrl);
+    };
+  }, [imageUrl]);
+
+  const url = preview?.source === imageUrl && !failed ? preview.url : null;
+  const size = detail ? "w-full h-48" : "h-16 w-16 shrink-0";
+  return url ? (
+    <img src={url} alt={alt} className={`${size} rounded-lg object-cover`} onError={() => setFailed(true)} />
+  ) : (
+    <div className={`${size} rounded-lg bg-muted flex items-center justify-center`} aria-label="Image unavailable">
+      <Leaf className="h-6 w-6 text-muted-foreground" />
+    </div>
+  );
+}
 
 export default function ScanHistory() {
-  const { user } = useAuth();
-  const { t } = useTheme();
+  const { user, loading: authLoading } = useAuth();
   const [scans, setScans] = useState<ScanRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedScan, setSelectedScan] = useState<ScanRecord | null>(null);
 
-  if (!user) return <Navigate to="/auth" replace />;
-
   useEffect(() => {
-    loadScans();
+    if (!user?.id) return;
+    let active = true;
+    setLoading(true);
+    void getScanHistory(user.id).then(data => {
+      if (active) {
+        setScans(data);
+        setLoading(false);
+      }
+    });
+    return () => { active = false; };
   }, [user?.id]);
 
-  const loadScans = async () => {
-    setLoading(true);
-    const data = await getScanHistory(user?.id);
-    setScans(data);
-    setLoading(false);
-  };
+  if (authLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+  if (!user) return <Navigate to="/auth" replace />;
 
   const handleDelete = async (scanId: string) => {
     await deleteScan(scanId, user?.id);
@@ -159,20 +191,7 @@ export default function ScanHistory() {
                   <CardContent className="p-4">
                     <div className="flex items-center gap-4">
                       {/* Thumbnail */}
-                      {scan.image_url ? (
-                        <img
-                          src={scan.image_url}
-                          alt={scan.crop_name}
-                          className="h-16 w-16 rounded-lg object-cover shrink-0"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
-                      ) : (
-                        <div className="h-16 w-16 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                          <Leaf className="h-6 w-6 text-muted-foreground" />
-                        </div>
-                      )}
+                      <ScanImage imageUrl={scan.image_url} alt={scan.crop_name} />
 
                       {/* Info */}
                       <div className="flex-1 min-w-0">
@@ -238,16 +257,7 @@ export default function ScanHistory() {
                   </DialogDescription>
                 </DialogHeader>
 
-                {selectedScan.image_url && (
-                  <img
-                    src={selectedScan.image_url}
-                    alt={selectedScan.crop_name}
-                    className="w-full h-48 object-cover rounded-lg"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                )}
+                <ScanImage imageUrl={selectedScan.image_url} alt={selectedScan.crop_name} detail />
 
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">

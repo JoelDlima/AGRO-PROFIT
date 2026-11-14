@@ -17,8 +17,6 @@ import {
   MapPin, 
   Clock,
   ArrowRight,
-  Star,
-  Navigation,
   AlertCircle,
   Navigation2
 } from "lucide-react";
@@ -30,6 +28,7 @@ import { useLocation } from "@/hooks/useLocation";
 import { geocodeIndianLocation, calculateDistance, formatDistance } from "@/services/locationService";
 import { useTheme } from "@/hooks/useTheme";
 import { getStateTranslation, getDistrictTranslation, translateMarketName } from "@/lib/locationTranslations";
+import { getMarketPresentation, getPriceSummary } from "@/lib/marketPresentation";
 
 export default function PriceComparison() {
   const [selectedCrop, setSelectedCrop] = useState("tomato");
@@ -60,18 +59,7 @@ export default function PriceComparison() {
     undefined // We can add state filter later
   );
   
-  // Debug logging
-  console.log("PriceComparison Debug:", {
-    selectedCrop,
-    cropName: selectedCropData?.name,
-    isLoading,
-    error,
-    mandiMarketsCount: mandiMarkets?.length,
-    mandiMarkets: mandiMarkets?.slice(0, 2) // Show first 2 for debugging
-  });
-  
-  // Use real data if available, otherwise fall back to mock data
-  const displayMarkets = mandiMarkets && mandiMarkets.length > 0 ? mandiMarkets : markets;
+  const { source, markets: displayMarkets } = getMarketPresentation(mandiMarkets, markets, isLoading);
   
   // Calculate distances for all markets if location available
   const marketsWithDistance = displayMarkets.map(market => {
@@ -108,12 +96,11 @@ export default function PriceComparison() {
     }
   });
   
-  const averagePrice = Math.round(displayMarkets.reduce((sum, m) => sum + m.price, 0) / displayMarkets.length);
-  const highestPrice = sortedMarkets[0]?.price || 0;
+  const { average: averagePrice, highest: highestPrice } = getPriceSummary(displayMarkets);
   
   // Convert price based on unit selection
   const convertPrice = (price: number) => {
-    return priceUnit === "kg" ? Math.round(price / 100) : price;
+    return priceUnit === "kg" ? price / 100 : price;
   };
 
   return (
@@ -127,6 +114,11 @@ export default function PriceComparison() {
           <p className="text-muted-foreground">
             {t("price.findBestMarket")}
           </p>
+          {source === "demo" && (
+            <p className="mt-2 font-medium text-destructive">
+              Synthetic demo data — not actual market rates.
+            </p>
+          )}
         </div>
 
         {/* Crop Selector */}
@@ -136,11 +128,11 @@ export default function PriceComparison() {
               {/* Crop Selection Row */}
               <div className="flex flex-col md:flex-row md:items-center gap-4">
                 <div className="flex-1">
-                  <label className="text-sm font-medium text-muted-foreground mb-2 block">
+                  <label htmlFor="price-comparison-crop" className="text-sm font-medium text-muted-foreground mb-2 block">
                     {t("price.selectCrop")}
                   </label>
                   <Select value={selectedCrop} onValueChange={setSelectedCrop}>
-                    <SelectTrigger className="h-14 text-lg">
+                    <SelectTrigger id="price-comparison-crop" className="h-14 text-lg">
                       <SelectValue>
                         {selectedCropData && (
                           <span className="flex items-center gap-2">
@@ -176,7 +168,7 @@ export default function PriceComparison() {
                     {isLoading ? (
                       <Skeleton className="h-8 w-20 mx-auto" />
                     ) : (
-                      <p className="text-2xl font-bold text-success">₹{convertPrice(highestPrice)}</p>
+                      <p className="text-2xl font-bold text-success">{highestPrice === null ? "—" : `₹${convertPrice(highestPrice)} / ${priceUnit}`}</p>
                     )}
                   </div>
                   <div className="text-center">
@@ -184,7 +176,7 @@ export default function PriceComparison() {
                     {isLoading ? (
                       <Skeleton className="h-8 w-20 mx-auto" />
                     ) : (
-                      <p className="text-2xl font-bold text-foreground">₹{convertPrice(averagePrice)}</p>
+                      <p className="text-2xl font-bold text-foreground">{averagePrice === null ? "—" : `₹${convertPrice(averagePrice)} / ${priceUnit}`}</p>
                     )}
                   </div>
                 </div>
@@ -247,21 +239,21 @@ export default function PriceComparison() {
         </Card>
 
         {/* Data source indicator */}
-        {mandiMarkets && mandiMarkets.length > 0 && (
+        {source === "records" && (
           <Alert className="mb-4">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              {t("price.showingLiveData")}
+              Mandi records returned by the data service; they may be cached or stale. Freshness and exact source cannot be verified here. Dates below are reported arrival dates, not fetch times.
+              {error && " The latest request also reported an error."}
             </AlertDescription>
           </Alert>
         )}
         
-        {/* Error state */}
-        {error && (
-          <Alert variant="destructive" className="mb-4">
+        {source === "demo" && (
+          <Alert className="mb-4">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Unable to fetch live prices. Showing sample data.
+              {error ? "The price request failed." : "No price records were returned; the service may also be unavailable."} Showing synthetic demo markets and prices, not actual rates for the selected crop. Do not use these examples for selling decisions.
             </AlertDescription>
           </Alert>
         )}
@@ -283,10 +275,8 @@ export default function PriceComparison() {
         {!isLoading && (
           <div className="space-y-4">
             {sortedMarkets.map((market, index) => {
-            const isAboveAverage = market.price > averagePrice;
-            const isBest = index === 0;
-            const priceDiff = market.price - averagePrice;
-            const priceDiffPercent = Math.round((priceDiff / averagePrice) * 100);
+            const isAboveAverage = averagePrice !== null && market.price > averagePrice;
+            const priceDiffPercent = averagePrice ? Math.round(((market.price - averagePrice) / averagePrice) * 100) : null;
             
             // Distance is already calculated in marketsWithDistance
             const distance = market.distance;
@@ -295,8 +285,7 @@ export default function PriceComparison() {
               <Card 
                 key={`${market.id}-${index}`} 
                 className={cn(
-                  "transition-all duration-300 hover:shadow-lg animate-slide-up",
-                  isBest && "border-2 border-success ring-2 ring-2-success/20"
+                  "transition-all duration-300 hover:shadow-lg animate-slide-up"
                 )}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
@@ -305,19 +294,13 @@ export default function PriceComparison() {
                     {/* Rank & Name */}
                     <div className="flex items-center gap-4 flex-1">
                       <div className={cn(
-                        "h-12 w-12 rounded-xl flex items-center justify-center text-lg font-bold shrink-0",
-                        isBest ? "bg-success text-success-foreground" : "bg-muted text-muted-foreground"
+                         "h-12 w-12 rounded-xl flex items-center justify-center text-lg font-bold shrink-0 bg-muted text-muted-foreground"
                       )}>
-                        {isBest ? <Star className="h-6 w-6" /> : index + 1}
+                        {index + 1}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
                           <h3 className="font-semibold text-foreground text-lg">{translateMarketName(market.name, language)}</h3>
-                          {isBest && (
-                            <span className="px-2 py-0.5 bg-success text-success-foreground text-xs font-medium rounded-full">
-                              {sortBy === "distance" ? t("price.nearest") : t("price.bestPrice")}
-                            </span>
-                          )}
                         </div>
                         <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
                           <span className="flex items-center gap-1">
@@ -327,7 +310,7 @@ export default function PriceComparison() {
                           {distance !== null && (
                             <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400 font-medium">
                               <Navigation2 className="h-3 w-3" />
-                              {formatDistance(distance)}
+                              Approx. {formatDistance(distance)} straight-line (estimated location)
                             </span>
                           )}
                           {distance === null && !userLocation && sortBy === "distance" && (
@@ -350,23 +333,23 @@ export default function PriceComparison() {
                     <div className="flex items-center justify-between md:justify-end gap-6 md:gap-10">
                       <div className="text-center">
                         <p className="text-sm text-muted-foreground">{t("price.modalPrice")}</p>
-                        <p className="font-medium text-foreground">₹{convertPrice(market.modalPrice)}</p>
+                        <p className="font-medium text-foreground">₹{convertPrice(market.modalPrice)} / {priceUnit}</p>
                       </div>
                       <div className="text-center">
                         <p className="text-sm text-muted-foreground">{t("price.range")}</p>
                         <p className="font-medium text-foreground">
-                          ₹{convertPrice(market.minPrice)} - ₹{convertPrice(market.maxPrice)}
+                          ₹{convertPrice(market.minPrice)} - ₹{convertPrice(market.maxPrice)} / {priceUnit}
                         </p>
                       </div>
                       <div className="text-center">
-                        <p className="text-sm text-muted-foreground">{t("price.current")}</p>
+                        <p className="text-sm text-muted-foreground">Reported price</p>
                         <p className="text-2xl font-bold text-foreground">
                           ₹{convertPrice(market.price)}
                           <span className="text-sm text-muted-foreground font-normal">
                             /{t(`price.${priceUnit}`)}
                           </span>
                         </p>
-                        <div className={cn(
+                        {priceDiffPercent !== null && <div className={cn(
                           "flex items-center justify-center gap-1 text-xs font-medium",
                           isAboveAverage ? "text-success" : "text-destructive"
                         )}>
@@ -376,22 +359,12 @@ export default function PriceComparison() {
                             <TrendingDown className="h-3 w-3" />
                           )}
                           {priceDiffPercent > 0 ? "+" : ""}{priceDiffPercent}% {t("price.vsAvg")}
-                        </div>
+                        </div>}
                       </div>
                     </div>
 
                     {/* Trend & Actions */}
                     <div className="flex items-center gap-3 md:ml-4">
-                      <div className={cn(
-                        "px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1",
-                        market.trend === "up" ? "bg-success/10 text-success" :
-                        market.trend === "down" ? "bg-destructive/10 text-destructive" :
-                        "bg-muted text-muted-foreground"
-                      )}>
-                        {market.trend === "up" ? <TrendingUp className="h-3 w-3" /> :
-                         market.trend === "down" ? <TrendingDown className="h-3 w-3" /> : null}
-                        {market.trend === "up" ? t("price.rising") : market.trend === "down" ? t("price.falling") : t("price.stable")}
-                      </div>
                       <Link to={`/trends?crop=${selectedCrop}`}>
                         <Button variant="outline" size="sm">
                           {t("price.trends")}
@@ -404,7 +377,7 @@ export default function PriceComparison() {
                   {/* Last Updated */}
                   <div className="flex items-center gap-1 text-xs text-muted-foreground mt-4 pt-4 border-t border-border">
                     <Clock className="h-3 w-3" />
-                    {t("price.updated")} {market.lastUpdated}
+                    {source === "demo" ? "Synthetic example — no actual report date" : `Reported arrival date: ${market.lastUpdated || "not available"}`}
                   </div>
                 </CardContent>
               </Card>

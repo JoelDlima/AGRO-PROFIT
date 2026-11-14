@@ -7,9 +7,7 @@
 
 import { getApiUrl } from "@/lib/api";
 
-const API_KEY = import.meta.env.VITE_DATA_GOV_API_KEY || "";
-const API_BASE = "https://api.data.gov.in/resource";
-const RAINFALL_RESOURCE_ID = "d758a71b-8caf-489b-a4c8-929e894e4a0b";
+import { liveServicesEnabled, requireLiveService } from '@/lib/demoConfig';
 
 export interface RainfallData {
   state: string;
@@ -43,58 +41,14 @@ export async function fetchRainfallData(
   state: string,
   year?: number
 ): Promise<RainfallResponse> {
-  const currentYear = year || new Date().getFullYear() - 1; // Last complete year
-  
-  // Tier 1: Same-origin Vercel serverless proxy /api/rainfall
-  try {
-    const res = await fetch(getApiUrl(`/api/rainfall?state=${encodeURIComponent(state || 'Maharashtra')}&limit=50`));
-    if (res.ok) {
-      const data = await res.json();
-      if (data.records && Array.isArray(data.records) && data.records.length > 0) {
-        return data;
-      }
-    }
-  } catch (apiErr) {
-    console.warn("[Rainfall] Serverless proxy error, trying direct API:", apiErr);
-  }
-
-  // Tier 2: Direct Government of India API
-  try {
-    const govKey = (API_KEY && !API_KEY.startsWith("579b902f")) 
-      ? API_KEY 
-      : "579b464db66ec23bdd000001a185928fbe0347295f3617eba10d887c";
-    const directUrl = `${API_BASE}/${RAINFALL_RESOURCE_ID}?api-key=${govKey}&format=json&limit=50&filters[state]=${encodeURIComponent(state || 'Maharashtra')}`;
-    const directRes = await fetch(directUrl);
-    if (directRes.ok) {
-      const directData = await directRes.json();
-      if (directData.records && Array.isArray(directData.records) && directData.records.length > 0) {
-        return directData;
-      }
-    }
-  } catch (directErr) {
-    console.warn("[Rainfall] Direct API error:", directErr);
-  }
-
-  // Fallback: realistic state rainfall data so widget displays gracefully
-  const fallbackRecord: RainfallData = {
-    state: state || "India",
-    district: "State Average",
-    year: String(currentYear),
-    jan: "14.2",
-    feb: "9.8",
-    mar: "16.5",
-    apr: "24.1",
-    may: "48.3",
-    jun: "192.4",
-    jul: "285.6",
-    aug: "254.1",
-    sep: "172.8",
-    oct: "68.2",
-    nov: "28.5",
-    dec: "11.2",
-    annual: "1125.7",
-  };
-  return { records: [fallbackRecord], total: 1, count: 1 };
+  requireLiveService(liveServicesEnabled(import.meta.env), 'Rainfall data');
+  const params = new URLSearchParams({ state: state || 'Maharashtra', limit: '50' });
+  if (year !== undefined) params.set('year', String(year));
+  const response = await fetch(getApiUrl(`/api/rainfall?${params}`));
+  if (!response.ok) throw new Error('Rainfall data is unavailable.');
+  const data = await response.json();
+  if (!Array.isArray(data.records)) throw new Error('Rainfall data is unavailable.');
+  return data;
 }
 
 /**

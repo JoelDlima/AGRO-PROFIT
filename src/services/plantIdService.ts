@@ -1,10 +1,12 @@
+import { requireLiveService } from '@/lib/demoConfig';
+import { supabaseLiveEnabled } from '@/integrations/supabase/client';
 /**
  * Plant.id API Service for AgroProfit
  * Calls Plant.id via Supabase Edge Function (plantid-detect)
  * NO API KEYS exposed on client side
  */
 
-const PLANTID_EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/plantid-detect`;
+const PLANTID_EDGE_FUNCTION_URL = `${import.meta.env.VITE_LIVE_SUPABASE_URL}/functions/v1/plantid-detect`;
 
 export interface PlantIdResult {
   cropName: string;
@@ -30,7 +32,7 @@ async function callPlantIdEdgeFunction(
   base64Image: string,
   action: 'identify' | 'health'
 ): Promise<any> {
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  const supabaseKey = import.meta.env.VITE_LIVE_SUPABASE_PUBLISHABLE_KEY;
 
   const response = await fetch(PLANTID_EDGE_FUNCTION_URL, {
     method: 'POST',
@@ -52,6 +54,7 @@ async function callPlantIdEdgeFunction(
 
 /** Analyze crop image for diseases using Plant.id API (via Edge Function) */
 export async function detectCropDisease(imageFile: File): Promise<PlantIdResult> {
+  requireLiveService(supabaseLiveEnabled, 'Plant identification');
   const base64Image = await imageToBase64(imageFile);
   console.log('[PlantID] Image converted, length:', base64Image.length);
 

@@ -36,7 +36,7 @@ export function useLocation(): UseLocationResult {
     }
   };
 
-  // Try to load from localStorage on mount and auto-detect if permission already granted
+  // Restore a previously saved location; acquire a new one only on explicit request.
   useEffect(() => {
     const savedLocation = localStorage.getItem('userLocation');
     if (savedLocation) {
@@ -49,21 +49,6 @@ export function useLocation(): UseLocationResult {
       }
     }
 
-    // Check if permission already granted by browser
-    if (typeof navigator !== 'undefined' && navigator.permissions && navigator.permissions.query) {
-      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
-        if (result.state === 'granted') {
-          getCurrentLocation()
-            .then(coords => reverseGeocode(coords.latitude, coords.longitude))
-            .then(locData => {
-              setLocation(locData);
-              setHasPermission(true);
-              localStorage.setItem('userLocation', JSON.stringify(locData));
-            })
-            .catch(() => {});
-        }
-      }).catch(() => {});
-    }
   }, []);
 
   return {

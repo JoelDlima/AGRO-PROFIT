@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "./useAuth";
+import { readDemoProfile, useAuth } from "./useAuth";
 import { useToast } from "./use-toast";
-import { crops } from "@/data/mockData";
 
 export interface UserProfile {
   id: string;
@@ -30,33 +29,9 @@ export function useUserProfile() {
 
     // Check if demo user
     if (user.id === '00000000-0000-0000-0000-000000000001' || user.email === 'demo@agroprofit.pro') {
-      const storedDemo = localStorage.getItem('demo_profile');
-      const allCropNames = crops.map(c => c.name);
-      if (storedDemo) {
-        try {
-          const parsed = JSON.parse(storedDemo);
-          // If stored demo profile has fewer crops or is outdated, ensure all crops are populated
-          if (!parsed.crops || parsed.crops.length < allCropNames.length) {
-            parsed.crops = allCropNames;
-            localStorage.setItem('demo_profile', JSON.stringify(parsed));
-          }
-          setProfile(parsed);
-        } catch (e) {
-          setProfile(null);
-        }
-      } else {
-        const defaultDemo: UserProfile = {
-          id: user.id,
-          full_name: 'Demo Farmer',
-          phone: '+919876543210',
-          state: 'Maharashtra',
-          crops: allCropNames,
-          preferred_language: 'en',
-          onboarding_completed: true,
-        };
-        localStorage.setItem('demo_profile', JSON.stringify(defaultDemo));
-        setProfile(defaultDemo);
-      }
+      const demoProfile = readDemoProfile(localStorage.getItem('demo_profile'), user.id);
+      localStorage.setItem('demo_profile', JSON.stringify(demoProfile));
+      setProfile(demoProfile);
       setLoading(false);
       return;
     }
@@ -87,16 +62,7 @@ export function useUserProfile() {
     if (!user) return { error: new Error("Not authenticated") };
 
     if (user.id === '00000000-0000-0000-0000-000000000001' || user.email === 'demo@agroprofit.pro') {
-      const allCropNames = crops.map(c => c.name);
-      const current = profile || {
-        id: user.id,
-        full_name: 'Demo Farmer',
-        phone: '+919876543210',
-        state: 'Maharashtra',
-        crops: allCropNames,
-        preferred_language: 'en',
-        onboarding_completed: true,
-      };
+      const current = profile || readDemoProfile(localStorage.getItem('demo_profile'), user.id);
       const updated = { ...current, ...updates };
       localStorage.setItem('demo_profile', JSON.stringify(updated));
       setProfile(updated);

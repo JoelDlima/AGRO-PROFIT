@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,8 +22,7 @@ import {
   Calendar,
   MapPin,
   Trash2,
-  Send,
-  Sparkles
+  Send
 } from "lucide-react";
 import { 
   getForumPosts, 
@@ -74,7 +72,8 @@ export default function Forum() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { profile } = useUserProfile();
-  const navigate = useNavigate();
+  const isLocalPreview = !user || user.email === "demo@agroprofit.pro" ||
+    user.id === "00000000-0000-0000-0000-000000000001";
 
   // Determine farmer display name
   const currentAuthorName =
@@ -101,7 +100,7 @@ export default function Forum() {
     } catch (error) {
       toast({
         title: "Notice",
-        description: "Loaded community discussions",
+        description: "Could not load discussions.",
       });
     } finally {
       setLoading(false);
@@ -129,7 +128,7 @@ export default function Forum() {
 
     setSubmitting(true);
     try {
-      await createForumPost(
+      const post = await createForumPost(
         title.trim(), 
         content.trim(), 
         category, 
@@ -138,8 +137,10 @@ export default function Forum() {
         currentAuthorName
       );
       toast({
-        title: "Post published! 🌾",
-        description: `Your discussion is now live as ${currentAuthorName}`,
+        title: post.storage === "local" ? "Post saved locally" : "Post published",
+        description: post.storage === "local"
+          ? "Saved in this browser only; not shared with the community."
+          : "Your discussion was published.",
       });
       setDialogOpen(false);
       setTitle("");
@@ -198,8 +199,10 @@ export default function Forum() {
       );
 
       toast({
-        title: "Message posted!",
-        description: "Your reply was shared with the community",
+        title: comment.storage === "local" ? "Reply saved locally" : "Reply posted",
+        description: comment.storage === "local"
+          ? "Saved in this browser only; not shared with the community."
+          : "Your reply was published.",
       });
     } catch (error) {
       console.error("Error posting comment:", error);
@@ -274,7 +277,12 @@ export default function Forum() {
             </h1>
             <p className="text-muted-foreground flex items-center gap-2 text-sm">
               <Users className="h-4 w-4 text-primary" />
-              Connect with farmers, share live mandi trends, and discuss crop management
+              Discuss farming topics and questions
+            </p>
+            <p className="text-muted-foreground text-sm mt-2">
+              {isLocalPreview
+                ? "Demo and guest posts and replies are saved in this browser only and are not shared with others."
+                : "If online saving is unavailable, posts and replies are saved in this browser only and are not shared."}
             </p>
           </div>
           
@@ -290,7 +298,7 @@ export default function Forum() {
               <DialogHeader>
                 <DialogTitle>Create a New Discussion</DialogTitle>
                 <DialogDescription>
-                  Share mandi prices, ask disease diagnosis advice, or discuss farming practices
+                  Ask questions or discuss farming practices. Local saves are not shared.
                 </DialogDescription>
               </DialogHeader>
               
@@ -304,9 +312,7 @@ export default function Forum() {
                 <span>
                   Posting as <strong className="text-foreground">{currentAuthorName}</strong> ({currentAuthorState})
                 </span>
-                <span className="ml-auto text-[11px] bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
-                  <Sparkles className="h-3 w-3" /> Live
-                </span>
+                {isLocalPreview && <span className="ml-auto">Local preview</span>}
               </div>
 
               <div className="space-y-4 py-2">
@@ -444,6 +450,9 @@ export default function Forum() {
                               <Badge variant="default" className="text-[10px] px-1.5 py-0 h-4 bg-amber-500 hover:bg-amber-600">
                                 <Pin className="h-2.5 w-2.5 mr-0.5" /> Pinned
                               </Badge>
+                            )}
+                            {post.id.startsWith("local_") && (
+                              <Badge variant="outline">This browser only</Badge>
                             )}
                             <h3 className="font-semibold text-foreground text-base hover:text-primary transition-colors">
                               {post.title}
@@ -643,6 +652,7 @@ export default function Forum() {
                           <div className="flex items-center justify-between mb-1">
                             <span className="font-semibold text-xs text-foreground">
                               {comment.user?.full_name || "Farmer"}
+                              {comment.storage === "local" && " · This browser only"}
                             </span>
                             <span className="text-[11px] text-muted-foreground">
                               {formatDistanceToNow(new Date(comment.created_at), {

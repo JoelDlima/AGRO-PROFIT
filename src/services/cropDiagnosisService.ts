@@ -1,3 +1,5 @@
+import { requireLiveService } from '@/lib/demoConfig';
+import { supabaseLiveEnabled } from '@/integrations/supabase/client';
 /**
  * Crop Diagnosis Service for AgroProfit
  * Generates AI-powered treatment explanations via Edge Function (crop-diagnosis)
@@ -6,7 +8,7 @@
 
 import type { PlantIdResult } from './plantIdService';
 
-const DIAGNOSIS_EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/crop-diagnosis`;
+const DIAGNOSIS_EDGE_FUNCTION_URL = `${import.meta.env.VITE_LIVE_SUPABASE_URL}/functions/v1/crop-diagnosis`;
 
 // In-memory cache
 const explanationCache = new Map<string, CropDiagnosisResult>();
@@ -39,6 +41,7 @@ export async function generateDiagnosis(
   language: string = 'en',
   weather?: any
 ): Promise<CropDiagnosisResult> {
+  requireLiveService(supabaseLiveEnabled, 'Crop diagnosis');
   // Check cache
   const cacheKey = `${plantData.cropName}-${plantData.diseaseName}-${language}`;
   const cached = explanationCache.get(cacheKey);
@@ -50,7 +53,7 @@ export async function generateDiagnosis(
   console.log('[Diagnosis] Generating AI explanation...');
 
   try {
-    const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    const supabaseKey = import.meta.env.VITE_LIVE_SUPABASE_PUBLISHABLE_KEY;
 
     const response = await fetch(DIAGNOSIS_EDGE_FUNCTION_URL, {
       method: 'POST',
@@ -76,8 +79,7 @@ export async function generateDiagnosis(
 
     return result;
   } catch (error) {
-    console.warn('[Diagnosis] Edge Function failed, using fallback', error);
-    return getFallbackExplanation(plantData, language);
+    throw new Error('Crop diagnosis is unavailable.');
   }
 }
 

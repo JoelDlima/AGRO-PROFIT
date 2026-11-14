@@ -8,13 +8,7 @@
 
 import { getApiUrl } from "@/lib/api";
 
-const AGMARKNET_API_BASE = "https://api.data.gov.in/resource";
-const RESOURCE_ID = "9ef84268-d588-465a-a308-a864a43d0070";
-
-const VERIFIED_DATA_GOV_KEY = "579b464db66ec23bdd000001a185928fbe0347295f3617eba10d887c";
-// Use verified key if user key is empty or is the known invalid key
-const envKey = import.meta.env.VITE_DATA_GOV_API_KEY;
-const API_KEY = (envKey && !envKey.startsWith("579b902f")) ? envKey : VERIFIED_DATA_GOV_KEY;
+import { liveServicesEnabled, requireLiveService } from '@/lib/demoConfig';
 
 // Commodity name mapping - API uses different names than our display names
 const COMMODITY_NAME_MAP: Record<string, string> = {
@@ -77,108 +71,17 @@ export async function fetchMandiPrices(
     offset?: number;
   }
 ): Promise<AgmarknetResponse> {
-  const apiCommodityName = normalizeCommodityName(commodity);
-  const limit = options?.limit || 200;
-
-  // Tier 1: Try Same-Origin Vercel Serverless Function (/api/mandi)
-  try {
-    const serverlessParams = new URLSearchParams({
-      commodity: apiCommodityName,
-      limit: String(limit),
-    });
-    if (options?.state) serverlessParams.append('state', options.state);
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s timeout
-
-    const proxyRes = await fetch(getApiUrl(`/api/mandi?${serverlessParams.toString()}`), {
-      signal: controller.signal,
-      headers: { Accept: 'application/json' },
-    });
-    clearTimeout(timeoutId);
-
-    if (proxyRes.ok) {
-      const data = await proxyRes.json();
-      if (data.records && Array.isArray(data.records) && data.records.length > 0) {
-        console.log(`[Mandi API] Fetched ${data.records.length} records via serverless proxy`);
-        return data;
-      }
-    }
-  } catch (proxyErr) {
-    console.warn('[Mandi API] Serverless proxy skipped or unavailable, trying direct fetch:', proxyErr);
-  }
-
-  // Tier 2: Direct Government of India API fetch with verified working key
-  const params = new URLSearchParams({
-    "api-key": VERIFIED_DATA_GOV_KEY,
-    format: "json",
-    limit: String(limit),
-    offset: String(options?.offset || 0),
-  });
-
-  params.append("filters[commodity]", apiCommodityName);
-  if (options?.state) params.append("filters[state]", options.state);
-  if (options?.district) params.append("filters[district]", options.district);
-  if (options?.market) params.append("filters[market]", options.market);
-
-  const directUrl = `${AGMARKNET_API_BASE}/${RESOURCE_ID}?${params.toString()}`;
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-    const directRes = await fetch(directUrl, {
-      signal: controller.signal,
-      headers: { Accept: 'application/json' },
-    });
-    clearTimeout(timeoutId);
-
-    if (directRes.ok) {
-      const data = await directRes.json();
-      if (data.records && Array.isArray(data.records) && data.records.length > 0) {
-        console.log(`[Mandi API] Direct fetch success: ${data.records.length} records`);
-        return data;
-      }
-    }
-  } catch (directErr) {
-    console.warn('[Mandi API] Direct fetch encountered network/CORS error, trying CORS proxy:', directErr);
-  }
-
-  // Tier 3: Public CORS proxy fallback
-  try {
-    const corsProxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-    const proxyRes = await fetch(corsProxyUrl, { signal: controller.signal });
-    clearTimeout(timeoutId);
-
-    if (proxyRes.ok) {
-      const data = await proxyRes.json();
-      if (data.records && Array.isArray(data.records) && data.records.length > 0) {
-        console.log(`[Mandi API] CORS proxy fetch success: ${data.records.length} records`);
-        return data;
-      }
-    }
-  } catch (corsErr) {
-    console.warn('[Mandi API] All fetch tiers failed for', commodity, corsErr);
-  }
-
-  return {
-    index_name: RESOURCE_ID,
-    title: commodity,
-    desc: 'Fallback',
-    created: Date.now(),
-    updated: Date.now(),
-    active: '1',
-    created_date: new Date().toISOString(),
-    updated_date: new Date().toISOString(),
-    records: [],
-    total: 0,
-    count: 0,
-    limit: String(limit),
-    offset: '0',
-  };
+  requireLiveService(liveServicesEnabled(import.meta.env), 'Mandi prices');
+  const params = new URLSearchParams({ commodity: normalizeCommodityName(commodity), limit: String(options?.limit || 200) });
+  if (options?.state) params.set('state', options.state);
+  if (options?.district) params.set('district', options.district);
+  if (options?.market) params.set('market', options.market);
+  if (options?.offset) params.set('offset', String(options.offset));
+  const response = await fetch(getApiUrl(`/api/mandi?${params}`));
+  if (!response.ok) throw new Error('Mandi prices are unavailable.');
+  const data = await response.json();
+  if (!Array.isArray(data.records)) throw new Error('Mandi prices are unavailable.');
+  return data;
 }
 
 /**
@@ -196,7 +99,7 @@ export async function fetchMultipleCommodityPrices(
       results.set(commodity, response.records);
     } catch (error) {
       console.error(`Error fetching prices for ${commodity}:`, error);
-      results.set(commodity, []);
+      throw error;
     }
   }
 
@@ -213,7 +116,7 @@ export async function fetchAvailableStates(): Promise<string[]> {
     return Array.from(states).sort();
   } catch (error) {
     console.error("Error fetching states:", error);
-    return [];
+    throw error;
   }
 }
 
@@ -227,7 +130,7 @@ export async function fetchDistrictsByState(state: string): Promise<string[]> {
     return Array.from(districts).sort();
   } catch (error) {
     console.error("Error fetching districts:", error);
-    return [];
+    throw error;
   }
 }
 

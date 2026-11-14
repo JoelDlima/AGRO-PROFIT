@@ -5,8 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
-  TrendingUp, 
-  TrendingDown, 
   MapPin, 
   MessageCircle, 
   BarChart3,
@@ -53,11 +51,6 @@ export default function Dashboard() {
     return crop.name;
   };
 
-  // Redirect to auth if not logged in
-  if (!authLoading && !user) {
-    return <Navigate to="/auth" replace />;
-  }
-
   // Get user's crops from profile
   const userCropNames = profile?.crops || [];
   const userCrops = userCropNames.map((cropName) => {
@@ -69,13 +62,8 @@ export default function Dashboard() {
   const firstCrop = userCropNames[0] || "Wheat";
   const activeCropForMarkets = selectedMarketCrop || firstCrop;
   
-  // Set initial selected crop when profile loads
-  if (selectedMarketCrop === "" && firstCrop) {
-    setSelectedMarketCrop(firstCrop);
-  }
-  
   // Fetch from all states (don't filter by state to get maximum results)
-  const { markets: realMarkets, isLoading: marketsLoading, error: marketsError } = useTransformedMarkets(activeCropForMarkets);
+  const { markets: realMarkets, isLoading: marketsLoading, error: marketsError } = useTransformedMarkets(!authLoading && !user ? "" : activeCropForMarkets);
   
   const hasRealData = !marketsLoading && realMarkets && realMarkets.length > 0;
   
@@ -114,7 +102,6 @@ export default function Dashboard() {
     : [...marketsWithDistance].sort((a, b) => b.price - a.price);
 
   const topMarkets = displayMarkets.slice(0, 3);
-  const showingRealData = hasRealData;
 
   const isLoading = authLoading || profileLoading;
   const displayName = profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Farmer';
@@ -130,7 +117,12 @@ export default function Dashboard() {
     queryKey: ['weather', effectiveState, userLocation?.latitude, userLocation?.longitude],
     queryFn: () => getCurrentWeather(effectiveState, userLocation?.latitude, userLocation?.longitude),
     staleTime: 1000 * 60 * 15, // 15 minutes
+    enabled: authLoading || !!user,
   });
+
+  if (!authLoading && !user) {
+    return <Navigate to="/auth" replace />;
+  }
 
   return (
     <AppLayout>
@@ -161,6 +153,12 @@ export default function Dashboard() {
         </div>
 
         {/* Weather Widget */}
+        {!weatherLoading && !weatherData && (
+          <Alert className="mb-6">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>Weather data unavailable for {currentDisplayLocation}.</AlertDescription>
+          </Alert>
+        )}
         {weatherData && !weatherLoading && (
           <Card className="mb-6 animate-slide-up border-blue-200 dark:border-blue-800">
             <CardHeader>
@@ -325,22 +323,15 @@ export default function Dashboard() {
           <Card className="animate-slide-up" style={{ animationDelay: "0.3s" }}>
             <CardHeader className="flex flex-row items-center justify-between">
               <div className="flex-1">
-                <CardTitle className="text-lg">{t("dashboard.topMarkets")}</CardTitle>
+                <CardTitle className="text-lg">Market prices</CardTitle>
                 <CardDescription>
-                  {userLocation ? "Nearest Mandis for" : t("dashboard.highestPrices")} {activeCropForMarkets}
-                  {showingRealData && (
-                    <span className="ml-2 inline-flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                      ● {t("data.liveData")} ({realMarkets?.length || 0} {t("data.markets")})
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                        3h Sync
-                      </span>
-                    </span>
-                  )}
+                  {activeCropForMarkets}
                   {userLocation && (
                     <span className="ml-2 text-xs text-blue-600 dark:text-blue-400 font-medium">
-                      📍 Nearest First
+                      Sorted by estimated distance when available; otherwise by price.
                     </span>
                   )}
+                  {!userLocation && <span className="ml-2">Sorted by price.</span>}
                   {marketsLoading && (
                     <span className="ml-2 text-xs text-muted-foreground">⟳ Loading...</span>
                   )}
@@ -376,7 +367,7 @@ export default function Dashboard() {
                   <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-900/10">
                     <AlertCircle className="h-4 w-4 text-blue-600" />
                     <AlertDescription className="text-blue-800 dark:text-blue-200 text-sm">
-                      Fetching live mandi prices from Government Mandis...
+                      Loading mandi price records...
                     </AlertDescription>
                   </Alert>
                   {[1, 2, 3].map((i) => (
@@ -391,7 +382,7 @@ export default function Dashboard() {
                 <div className="text-center py-8 text-muted-foreground">
                   <AlertCircle className="h-8 w-8 mx-auto mb-2 text-yellow-500" />
                   <p className="text-sm font-medium">Market data temporarily unavailable</p>
-                  <p className="text-xs mt-1">Government API is experiencing delays</p>
+                  <p className="text-xs mt-1">Please try again later.</p>
                   <Button 
                     variant="outline" 
                     size="sm" 
@@ -408,6 +399,20 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="space-y-3">
+                  {hasRealData ? (
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>Prices may be cached or outdated. Verify with the market before making decisions.</AlertDescription>
+                    </Alert>
+                  ) : (
+                    <Alert className="border-amber-500 bg-amber-50 dark:bg-amber-950/30">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>Sample prices only, not current market prices or specific to the selected crop.</AlertDescription>
+                    </Alert>
+                  )}
+                  {userLocation && (
+                    <p className="text-xs text-muted-foreground">Distances are straight-line and approximate; market locations may be estimates, not road distances.</p>
+                  )}
                   {topMarkets.map((market: any, index) => {
                     const distance = market.distance ?? null;
                     
@@ -417,9 +422,7 @@ export default function Dashboard() {
                     className="flex items-center justify-between p-4 rounded-xl border border-border hover:border-primary/50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                        index === 0 ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"
-                      }`}>
+                      <div className="h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold bg-muted text-muted-foreground">
                         {index + 1}
                       </div>
                       <div>
@@ -432,7 +435,7 @@ export default function Dashboard() {
                           {distance !== null && (
                             <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
                               <Navigation2 className="h-3 w-3" />
-                              {formatDistance(distance)}
+                              Approx. {formatDistance(distance)} straight-line
                             </span>
                           )}
                         </div>
@@ -440,16 +443,6 @@ export default function Dashboard() {
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-lg text-foreground">₹{market.price}/quintal</p>
-                      <div className={`flex items-center justify-end gap-1 text-xs ${
-                        market.trend === "up" ? "text-success" : market.trend === "down" ? "text-destructive" : "text-muted-foreground"
-                      }`}>
-                        {market.trend === "up" ? (
-                          <TrendingUp className="h-3 w-3" />
-                        ) : market.trend === "down" ? (
-                          <TrendingDown className="h-3 w-3" />
-                        ) : null}
-                        {market.trend === "up" ? t("dashboard.rising") : market.trend === "down" ? t("dashboard.falling") : t("dashboard.stable")}
-                      </div>
                     </div>
                   </div>
                     );
@@ -468,9 +461,9 @@ export default function Dashboard() {
                 <Sparkles className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg">{t("dashboard.aiInsight")}</h3>
+                <h3 className="font-semibold text-lg">Market information</h3>
                 <p className="text-sm opacity-90">
-                  Tomato prices expected to rise 15% next week. Consider holding your stock.
+                  Check current prices and local conditions before making a decision.
                 </p>
               </div>
             </div>
@@ -486,8 +479,9 @@ export default function Dashboard() {
         <div className="mt-6 animate-slide-up">
           <div className="grid lg:grid-cols-2 gap-6">
             <PriceCalculator 
-              commodity={userCropNames[0]} 
-              marketPrice={topMarkets[0]?.price}
+              key={activeCropForMarkets}
+              commodity={activeCropForMarkets}
+              marketPrice={hasRealData && !marketsError ? topMarkets[0]?.price : undefined}
             />
             
             {/* Rainfall Widget */}

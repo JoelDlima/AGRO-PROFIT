@@ -4,20 +4,17 @@
  * Data from crop_cultivation_data.json (87 verified videos across 10 categories)
  */
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { Navigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  BookOpen, Play, ExternalLink, Search, ChevronDown, ChevronUp,
-  X
+  BookOpen, Play, ExternalLink, Search, ChevronDown, ChevronUp
 } from "lucide-react";
-import { extractYouTubeId, getYouTubeEmbedUrl } from "@/lib/youtube";
 import guides from "@/data/crop_cultivation_data.json";
 
 /* ── Types ── */
@@ -61,8 +58,6 @@ export default function Resources() {
   const { user } = useAuth();
   const { language } = useTheme();
 
-  if (!user) return <Navigate to="/auth" replace />;
-
   const data = guides as unknown as GuidesJson;
   const isHindi = language === 'hi';
 
@@ -80,7 +75,6 @@ export default function Resources() {
 
   const [activeCategoryKey, setActiveCategoryKey] = useState(() => categories[0]?.key ?? '');
   const [search, setSearch] = useState('');
-  const [player, setPlayer] = useState<{ title: string; url: string } | null>(null);
 
   const activeCategory = useMemo(
     () => categories.find((c) => c.key === activeCategoryKey) ?? categories[0],
@@ -99,17 +93,7 @@ export default function Resources() {
     });
   }, [activeCategory?.crops, normalized]);
 
-  const embedUrl = useMemo(() => (player ? getYouTubeEmbedUrl(player.url) : null), [player]);
-
-  /* Close modal on Escape */
-  useEffect(() => {
-    if (!player) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setPlayer(null);
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [player]);
+  if (!user) return <Navigate to="/auth" replace />;
 
   return (
     <AppLayout>
@@ -139,6 +123,7 @@ export default function Resources() {
                 {/* Mobile dropdown */}
                 <div className="lg:hidden mb-2">
                   <select
+                    aria-label={isHindi ? 'श्रेणी चुनें' : 'Choose category'}
                     className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
                     value={activeCategoryKey}
                     onChange={(e) => setActiveCategoryKey(e.target.value)}
@@ -195,6 +180,7 @@ export default function Resources() {
               <div className="relative w-full sm:w-72">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
+                  aria-label={isHindi ? 'फसल खोजें' : 'Search crops'}
                   placeholder={isHindi ? 'फसल खोजें...' : 'Search crops...'}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -209,7 +195,6 @@ export default function Resources() {
                 <CropCard
                   key={crop.crop_id || crop.crop_name}
                   crop={crop}
-                  onPlay={(v) => setPlayer({ title: v.title, url: v.url })}
                 />
               ))}
 
@@ -228,68 +213,13 @@ export default function Resources() {
           </section>
         </div>
 
-        {/* Video Player Modal */}
-        {player && (
-          <div
-            className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
-            onClick={(e) => { if (e.currentTarget === e.target) setPlayer(null); }}
-          >
-            <div className="w-full max-w-4xl">
-              <Card className="overflow-hidden">
-                {/* Modal header */}
-                <div className="p-4 border-b border-border/50 flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-xs text-muted-foreground">Now Playing</p>
-                    <p className="font-semibold truncate">{player.title}</p>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <a href={player.url} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="gap-1 text-xs">
-                        <ExternalLink className="h-3 w-3" /> YouTube
-                      </Button>
-                    </a>
-                    <Button variant="ghost" size="icon" onClick={() => setPlayer(null)} className="h-8 w-8">
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Iframe or fallback */}
-                <div className="p-4">
-                  {embedUrl ? (
-                    <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
-                      <iframe
-                        className="w-full h-full"
-                        src={embedUrl}
-                        title={player.title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                      />
-                    </div>
-                  ) : (
-                    <div className="rounded-xl border border-border/50 bg-muted/50 p-6 text-center">
-                      <p className="font-semibold">Can't embed this video</p>
-                      <p className="text-sm text-muted-foreground mt-1">Open it directly on YouTube</p>
-                      <a href={player.url} target="_blank" rel="noopener noreferrer">
-                        <Button className="mt-4 gap-2">
-                          <ExternalLink className="h-4 w-4" /> Open on YouTube
-                        </Button>
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </Card>
-            </div>
-          </div>
-        )}
       </div>
     </AppLayout>
   );
 }
 
 /* ── Crop Card Component ── */
-function CropCard({ crop, onPlay }: { crop: CropGuide; onPlay: (video: VideoGuide) => void }) {
+function CropCard({ crop }: { crop: CropGuide }) {
   const [open, setOpen] = useState(false);
   const videos = crop.videos ?? [];
   const locals = (crop.local_names ?? []).filter(Boolean);
@@ -299,6 +229,7 @@ function CropCard({ crop, onPlay }: { crop: CropGuide; onPlay: (video: VideoGuid
       {/* Crop header (click to expand) */}
       <button
         type="button"
+        aria-expanded={open}
         className="w-full text-left p-4 flex items-start justify-between gap-3 hover:bg-muted/30 transition-colors"
         onClick={() => setOpen((v) => !v)}
       >
@@ -325,31 +256,16 @@ function CropCard({ crop, onPlay }: { crop: CropGuide; onPlay: (video: VideoGuid
       {open && (
         <div className="p-4 pt-0 space-y-2">
           {videos.length > 0 ? (
-            videos.map((v) => {
-              const ytId = extractYouTubeId(v.url);
-              return (
+            videos.map((v) => (
                 <div
                   key={String(v.video_id ?? v.url)}
                   className="group rounded-lg border border-border/30 bg-muted/20 hover:bg-muted/40 transition-colors p-3"
                 >
                   <div className="flex items-start gap-3">
-                    {/* Thumbnail */}
-                    {ytId && (
-                      <button
-                        type="button"
-                        className="relative shrink-0 rounded-md overflow-hidden w-28 h-16"
-                        onClick={() => onPlay(v)}
-                      >
-                        <img
-                          src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
-                          alt={v.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                          <Play className="h-5 w-5 text-white fill-white" />
-                        </div>
-                      </button>
-                    )}
+                    {/* Local placeholder: no external media is loaded. */}
+                    <div className="shrink-0 rounded-md w-28 h-16 bg-muted flex items-center justify-center" aria-hidden="true">
+                      <Play className="h-5 w-5 text-muted-foreground" />
+                    </div>
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
@@ -367,24 +283,15 @@ function CropCard({ crop, onPlay }: { crop: CropGuide; onPlay: (video: VideoGuid
 
                     {/* Actions */}
                     <div className="flex items-center gap-1 shrink-0">
-                      <Button
-                        size="sm"
-                        variant="default"
-                        className="h-7 px-2 text-xs gap-1"
-                        onClick={() => onPlay(v)}
-                      >
-                        <Play className="h-3 w-3" /> Play
-                      </Button>
-                      <a href={v.url} target="_blank" rel="noopener noreferrer">
-                        <Button size="sm" variant="ghost" className="h-7 w-7 p-0">
-                          <ExternalLink className="h-3 w-3" />
-                        </Button>
+                      <a href={v.url} target="_blank" rel="noopener noreferrer"
+                        aria-label={`Open ${v.title} on YouTube (opens in a new tab)`}
+                        className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                        <ExternalLink className="h-3 w-3" aria-hidden="true" /> Open on YouTube
                       </a>
                     </div>
                   </div>
                 </div>
-              );
-            })
+              ))
           ) : (
             <p className="text-sm text-muted-foreground py-2">No videos available yet for this crop.</p>
           )}

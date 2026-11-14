@@ -3,32 +3,29 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
-import { useEffect, Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
 import FloatingSettings from "@/components/FloatingSettings";
 import Landing from "./pages/Landing";
-import Auth from "./pages/Auth";
-import Onboarding from "./pages/Onboarding";
-import Dashboard from "./pages/Dashboard";
-import PriceComparison from "./pages/PriceComparison";
-import PriceTrends from "./pages/PriceTrends";
-import Chatbot from "./pages/Chatbot";
-import Profile from "./pages/Profile";
-import Forum from "./pages/Forum";
-import APITest from "./pages/APITest";
-import ExportReport from "./pages/ExportReport";
 import NotFound from "./pages/NotFound";
-import CropHealth from "./pages/CropHealth";
-import ScanHistory from "./pages/ScanHistory";
-import Resources from "./pages/Resources";
-import { backgroundSyncAllCrops } from "@/services/mandiCacheService";
-import { crops } from "@/data/mockData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Capacitor } from "@capacitor/core";
 
 // Lazy load StateMap to prevent Leaflet from causing issues
 const StateMap = lazy(() => import("./pages/StateMap"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Onboarding = lazy(() => import("./pages/Onboarding"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const PriceComparison = lazy(() => import("./pages/PriceComparison"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Forum = lazy(() => import("./pages/Forum"));
+const ScanHistory = lazy(() => import("./pages/ScanHistory"));
+const PriceTrends = lazy(() => import("./pages/PriceTrends"));
+const Chatbot = lazy(() => import("./pages/Chatbot"));
+const ExportReport = lazy(() => import("./pages/ExportReport"));
+const CropHealth = lazy(() => import("./pages/CropHealth"));
+const Resources = lazy(() => import("./pages/Resources"));
 
 const queryClient = new QueryClient();
 
@@ -36,24 +33,6 @@ const queryClient = new QueryClient();
 const Router = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter;
 
 const App = () => {
-  // Background sync all crop prices on app mount
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        console.log('[App] Starting background price sync...');
-        const cropNames = crops.map(c => c.name);
-        // Run in background, don't block UI
-        backgroundSyncAllCrops(cropNames).catch(err => 
-          console.error('[App] Background sync error:', err)
-        );
-      } catch (error) {
-        console.error('[App] Failed to initialize background sync:', error);
-      }
-    };
-
-    initializeApp();
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
@@ -62,6 +41,7 @@ const App = () => {
             <Toaster />
             <Sonner />
             <Router>
+              <Suspense fallback={<div role="status" className="container mx-auto px-4 py-12">Loading page…</div>}>
               <Routes>
                 <Route path="/" element={<Landing />} />
                 <Route path="/auth" element={<Auth />} />
@@ -81,9 +61,9 @@ const App = () => {
                   </Suspense>
                 } />
                 <Route path="/export" element={<ExportReport />} />
-                <Route path="/api-test" element={<APITest />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              </Suspense>
               <FloatingSettings />
             </Router>
           </TooltipProvider>

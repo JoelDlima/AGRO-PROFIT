@@ -20,10 +20,9 @@ import {
   Info,
   Loader2
 } from "lucide-react";
-import { crops, markets } from "@/data/mockData";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from "recharts";
+import { crops } from "@/data/mockData";
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from "recharts";
 import { getPriceHistory } from "@/services/forumService";
-import { getCachedPrices, getMandiPricesWithCache } from "@/services/mandiCacheService";
 import { useTheme } from "@/hooks/useTheme";
 
 export default function PriceTrends() {
@@ -53,20 +52,17 @@ export default function PriceTrends() {
   
   const cropDataById = crops.find((c) => c.id === selectedCrop);
   const selectedCropData = cropDataById || crops.find((c) => c.name === selectedCrop);
+  const cropName = selectedCropData?.name ?? selectedCrop;
 
-  // Fetch real price history or current mandi prices
+  // Fetch recorded price history
   useEffect(() => {
+    let active = true;
     const fetchPriceData = async () => {
       setLoading(true);
       try {
-        // Ensure cache or live data is present
-        let cachedPrices = await getCachedPrices(selectedCrop);
-        if (!cachedPrices || cachedPrices.length === 0) {
-          cachedPrices = await getMandiPricesWithCache(selectedCrop);
-        }
-
         // Get historical data from price_history table
-        const historyData = await getPriceHistory(selectedCrop, undefined, parseInt(timeRange));
+        const historyData = await getPriceHistory(cropName, undefined, parseInt(timeRange));
+        if (!active) return;
         
         if (historyData && historyData.length > 1) {
           // Group by date and calculate average price per day
@@ -87,47 +83,25 @@ export default function PriceTrends() {
             }))
             .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
           
-          setTrendData(chartData);
-          setHasData(true);
-        } else if (cachedPrices && cachedPrices.length > 0) {
-          // Calculate average price from cached/live prices
-          const avgPrice = Math.round(
-            cachedPrices.reduce((sum, p) => sum + (parseFloat(String(p.modal_price)) || 0), 0) / cachedPrices.length
-          );
-          const days = parseInt(timeRange) || 7;
-          const points: Array<{ date: string; price: number }> = [];
-          const now = new Date();
-          
-          for (let i = days - 1; i >= 0; i--) {
-            const d = new Date(now);
-            d.setDate(d.getDate() - i);
-            // Realistic subtle daily variations leading to today's avgPrice
-            const variation = Math.sin(i * 1.5) * 0.02 - (i * 0.002);
-            points.push({
-              date: d.toISOString().split('T')[0],
-              price: Math.round(avgPrice * (1 + variation)),
-            });
-          }
-          if (points.length > 0) {
-            points[points.length - 1].price = avgPrice;
-          }
-          setTrendData(points);
-          setHasData(true);
+          setTrendData(chartData.length > 1 ? chartData : []);
+          setHasData(chartData.length > 1);
         } else {
           setTrendData([]);
           setHasData(false);
         }
       } catch (error) {
+        if (!active) return;
         console.error('Error fetching price trends:', error);
         setTrendData([]);
         setHasData(false);
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
 
     fetchPriceData();
-  }, [selectedCrop, timeRange]);
+    return () => { active = false; };
+  }, [cropName, timeRange]);
 
   const currentPrice = trendData[trendData.length - 1]?.price || 0;
   const previousPrice = trendData[0]?.price || 0;
@@ -143,37 +117,30 @@ export default function PriceTrends() {
 
   const insights = hasData ? [
     {
-      type: isUp ? "positive" : "negative",
-      title: isUp ? "Price Rising" : "Price Falling",
-      description: `Prices have ${isUp ? "increased" : "decreased"} by ${Math.abs(priceChangePercent)}% over the last ${trendData.length} days of data.`,
+      type: priceChange === 0 ? "info" : isUp ? "positive" : "negative",
+      title: "Historical Price Change",
+      description: `The daily average ${priceChange === 0 ? "was unchanged" : isUp ? "increased" : "decreased"} by ${Math.abs(priceChangePercent)}% between ${trendData[0].date} and ${trendData[trendData.length - 1].date}.`,
     },
     {
       type: "info",
-      title: "Best Time to Sell",
-      description: isUp 
-        ? "Consider holding for a few more days - prices are trending upward."
-        : "Prices are falling. Consider selling soon to avoid further losses.",
+      title: "About This Trend",
+      description: "Past prices do not predict future prices.",
     },
     {
       type: "tip",
       title: "Market Insight",
-      description: `Average price across all markets: ₹${avgPrice}/${selectedCropData?.unit}. Check Price Comparison for best markets today.`,
+      description: `Average of recorded daily prices: ₹${avgPrice}/${selectedCropData?.unit}. Check Price Comparison for available market prices.`,
     },
   ] : [
     {
       type: "info",
-      title: "Data Collection in Progress",
-      description: "Price history is being collected. Trends will be available after 2-3 days of data accumulation.",
+      title: "History Unavailable",
+      description: "At least two dates of recorded prices are needed to show a trend.",
     },
     {
       type: "tip",
-      title: "Current Prices Available",
-      description: "Visit the Price Comparison page to see today's live market prices.",
-    },
-    {
-      type: "info",
-      title: "Automatic Updates",
-      description: "Prices are automatically fetched every 12 hours to build historical trends.",
+      title: "Price Comparison",
+      description: "Visit the Price Comparison page to check available market prices.",
     },
   ];
 
@@ -195,7 +162,7 @@ export default function PriceTrends() {
           <Alert className="mb-6 border-yellow-500/50">
             <AlertCircle className="h-4 w-4 text-yellow-500" />
             <AlertDescription>
-              Insufficient historical data for {selectedCropData?.name}. Price trends require 2-3 days of data collection. The system automatically syncs prices every 12 hours. Current prices are available on the Price Comparison page.
+              Insufficient or unavailable historical data for {selectedCropData?.name}. A trend requires recorded prices on at least two dates.
             </AlertDescription>
           </Alert>
         )}
@@ -204,7 +171,7 @@ export default function PriceTrends() {
           <Alert className="mb-6">
             <Info className="h-4 w-4" />
             <AlertDescription>
-              Showing {trendData.length} days of price data. More accurate trends will be available after 7+ days of collection.
+              Showing prices recorded on {trendData.length} dates. Past prices do not predict future prices.
             </AlertDescription>
           </Alert>
         )}
@@ -217,7 +184,7 @@ export default function PriceTrends() {
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">
                   Select Crop
                 </label>
-                <Select value={selectedCrop} onValueChange={setSelectedCrop}>
+                <Select value={cropName} onValueChange={setSelectedCrop}>
                   <SelectTrigger className="h-12">
                     <SelectValue />
                   </SelectTrigger>
@@ -258,10 +225,10 @@ export default function PriceTrends() {
         </Card>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {hasData && !loading && (<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[
             { 
-              label: "Current Price", 
+              label: "Latest Recorded Average",
               value: `₹${currentPrice}`, 
               subtext: `per ${selectedCropData?.unit}`,
               change: isUp ? `+${priceChangePercent}%` : `${priceChangePercent}%`,
@@ -287,7 +254,7 @@ export default function PriceTrends() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </div>)}
 
         {/* Chart */}
         <Card className="mb-6 animate-slide-up" style={{ animationDelay: "0.2s" }}>
@@ -308,8 +275,8 @@ export default function PriceTrends() {
             ) : trendData.length === 0 ? (
               <div className="h-[300px] md:h-[400px] flex flex-col items-center justify-center text-center">
                 <Calendar className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                <p className="text-muted-foreground">No price data available yet</p>
-                <p className="text-sm text-muted-foreground mt-2">Data will appear after the first sync</p>
+                <p className="text-muted-foreground">Not enough recorded price history to show a trend</p>
+                <p className="text-sm text-muted-foreground mt-2">At least two dates of recorded prices are needed.</p>
               </div>
             ) : (
               <div className="h-[300px] md:h-[400px]">
@@ -358,7 +325,7 @@ export default function PriceTrends() {
 
         {/* Insights */}
         <div className="grid md:grid-cols-3 gap-4">
-          {insights.map((insight, index) => (
+          {!loading && insights.map((insight, index) => (
             <Card 
               key={insight.title} 
               className={`animate-slide-up ${

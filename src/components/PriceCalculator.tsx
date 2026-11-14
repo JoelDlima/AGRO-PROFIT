@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Calculator, ArrowRightLeft } from "lucide-react";
 import { crops } from "@/data/mockData";
+import { calculatePrice, marketPricePerKg } from "@/lib/priceMath";
 
 interface PriceCalculatorProps {
   commodity?: string;
@@ -13,36 +14,28 @@ interface PriceCalculatorProps {
 }
 
 export function PriceCalculator({ commodity, marketPrice }: PriceCalculatorProps) {
-  const [selectedCrop, setSelectedCrop] = useState(commodity || "");
+  const [cropOverride, setCropOverride] = useState<{ commodity?: string; crop: string } | null>(null);
   const [quantity, setQuantity] = useState("");
   const [unit, setUnit] = useState("quintal");
-  const [pricePerUnit, setPricePerUnit] = useState(marketPrice?.toString() || "");
-  const [calculatedTotal, setCalculatedTotal] = useState<number | null>(null);
-
-  const selectedCropData = crops.find((c) => c.name.toLowerCase() === selectedCrop.toLowerCase());
-  const defaultUnit = selectedCropData?.unit || "quintal";
+  const [priceOverride, setPriceOverride] = useState<{ commodity?: string; crop: string; value: string } | null>(null);
+  const [result, setResult] = useState<{ total: number; inputs: string } | null>(null);
+  const selectedCrop = cropOverride && cropOverride.commodity === commodity ? cropOverride.crop : commodity || "";
+  const marketPriceKg = marketPricePerKg(commodity, selectedCrop, marketPrice);
+  const pricePerUnit = priceOverride && priceOverride.commodity === commodity && priceOverride.crop === selectedCrop
+    ? priceOverride.value
+    : marketPriceKg?.toString() || "";
+  const inputs = JSON.stringify([commodity, selectedCrop, quantity, unit, pricePerUnit]);
+  const calculatedTotal = result?.inputs === inputs ? result.total : null;
 
   const units = [
-    { value: "kg", label: "Kilogram (kg)", multiplier: 1 },
-    { value: "quintal", label: "Quintal (100 kg)", multiplier: 100 },
-    { value: "ton", label: "Ton (1000 kg)", multiplier: 1000 },
+    { value: "kg", label: "Kilogram (kg)" },
+    { value: "quintal", label: "Quintal (100 kg)" },
+    { value: "ton", label: "Ton (1000 kg)" },
   ];
 
   const handleCalculate = () => {
-    const qty = parseFloat(quantity);
-    const price = parseFloat(pricePerUnit);
-    
-    if (isNaN(qty) || isNaN(price) || qty <= 0 || price <= 0) {
-      setCalculatedTotal(null);
-      return;
-    }
-
-    const selectedUnit = units.find(u => u.value === unit);
-    const qtyInKg = qty * (selectedUnit?.multiplier || 1);
-    
-    // Price is typically per kg in the API
-    const total = qtyInKg * price;
-    setCalculatedTotal(total);
+    const total = calculatePrice(quantity, pricePerUnit, unit);
+    setResult(total === null ? null : { total, inputs });
   };
 
   const formatCurrency = (amount: number) => {
@@ -61,14 +54,18 @@ export function PriceCalculator({ commodity, marketPrice }: PriceCalculatorProps
           <CardTitle className="text-lg">Price Calculator</CardTitle>
         </div>
         <CardDescription>
-          Calculate total price for buying or selling crops
+          Estimate total price for buying or selling crops. Actual proceeds may differ due to fees, quality and market changes.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Crop Selection */}
         <div className="space-y-2">
           <Label htmlFor="crop-select">Select Crop</Label>
-          <Select value={selectedCrop} onValueChange={setSelectedCrop}>
+          <Select value={selectedCrop} onValueChange={(crop) => {
+            setCropOverride({ commodity, crop });
+            setPriceOverride(null);
+            setResult(null);
+          }}>
             <SelectTrigger id="crop-select">
               <SelectValue placeholder="Choose a crop" />
             </SelectTrigger>
@@ -90,7 +87,7 @@ export function PriceCalculator({ commodity, marketPrice }: PriceCalculatorProps
             type="number"
             placeholder="Enter quantity"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => { setQuantity(e.target.value); setResult(null); }}
             min="0"
             step="0.01"
           />
@@ -99,7 +96,7 @@ export function PriceCalculator({ commodity, marketPrice }: PriceCalculatorProps
         {/* Unit Selection */}
         <div className="space-y-2">
           <Label htmlFor="unit-select">Unit</Label>
-          <Select value={unit} onValueChange={setUnit}>
+          <Select value={unit} onValueChange={(value) => { setUnit(value); setResult(null); }}>
             <SelectTrigger id="unit-select">
               <SelectValue />
             </SelectTrigger>
@@ -121,10 +118,18 @@ export function PriceCalculator({ commodity, marketPrice }: PriceCalculatorProps
             type="number"
             placeholder="Enter price per kg"
             value={pricePerUnit}
-            onChange={(e) => setPricePerUnit(e.target.value)}
+            onChange={(e) => {
+              setPriceOverride({ commodity, crop: selectedCrop, value: e.target.value });
+              setResult(null);
+            }}
             min="0"
             step="0.01"
           />
+          <p className="text-xs text-muted-foreground">
+            {marketPriceKg !== null && !(priceOverride && priceOverride.commodity === commodity && priceOverride.crop === selectedCrop)
+              ? "Market price converted from ₹/quintal to ₹/kg; you can edit it."
+              : "Enter a price per kg for this crop."}
+          </p>
         </div>
 
         {/* Calculate Button */}
@@ -138,7 +143,7 @@ export function PriceCalculator({ commodity, marketPrice }: PriceCalculatorProps
           <div className="mt-4 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Amount</p>
+                <p className="text-sm text-muted-foreground">Estimated Total</p>
                 <p className="text-3xl font-bold text-green-700 dark:text-green-400">
                   {formatCurrency(calculatedTotal)}
                 </p>
@@ -147,7 +152,7 @@ export function PriceCalculator({ commodity, marketPrice }: PriceCalculatorProps
             </div>
             <div className="mt-3 pt-3 border-t border-green-200 dark:border-green-800">
               <p className="text-xs text-muted-foreground">
-                {quantity} {unit} × ₹{pricePerUnit}/kg = {formatCurrency(calculatedTotal)}
+                {quantity} {unit} × {unit === "kg" ? 1 : unit === "quintal" ? 100 : 1000} kg/{unit} × ₹{pricePerUnit}/kg = {formatCurrency(calculatedTotal)}
               </p>
             </div>
           </div>

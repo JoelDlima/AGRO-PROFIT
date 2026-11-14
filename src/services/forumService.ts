@@ -1,6 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
+import { liveServicesEnabled } from "@/lib/demoConfig";
 
 export interface ForumPost {
+  storage?: "local" | "online";
   id: string;
   user_id: string;
   title: string;
@@ -20,6 +22,7 @@ export interface ForumPost {
 }
 
 export interface ForumComment {
+  storage?: "local" | "online";
   id: string;
   post_id: string;
   user_id: string;
@@ -30,138 +33,6 @@ export interface ForumComment {
     full_name: string;
   };
 }
-
-// Initial realistic community discussions for farmers
-const SEED_POSTS: ForumPost[] = [
-  {
-    id: "seed_post_1",
-    user_id: "seed_farmer_1",
-    title: "Tomato Mandi Prices surging in Kolar & Madanapalle (₹3,200/qtl)",
-    content: "Modal prices for hybrid tomatoes in Kolar APMC crossed ₹3,200 per quintal this morning due to sudden supply deficits from neighboring districts. Highly recommend harvesting ripe batches now before arrivals increase next Monday.",
-    category: "price-discussion",
-    crop: "Tomato",
-    state: "Karnataka",
-    likes_count: 18,
-    comments_count: 2,
-    is_pinned: true,
-    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    user: {
-      full_name: "Ramesh Gowda",
-      state: "Karnataka",
-    },
-  },
-  {
-    id: "seed_post_2",
-    user_id: "seed_farmer_2",
-    title: "Effective organic management for Chilli Leaf Curl virus (Murda rog)",
-    content: "For thrips and whiteflies causing leaf curl in chilli, spraying neem oil (10,000 ppm @ 3ml/L) along with sour buttermilk spray (50ml/L) every 7 days gives 80%+ control. Avoid excess nitrogen fertilizer during flowering stage.",
-    category: "crop-advice",
-    crop: "Chilli",
-    state: "Gujarat",
-    likes_count: 34,
-    comments_count: 1,
-    is_pinned: false,
-    created_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-    user: {
-      full_name: "Suresh Patel",
-      state: "Gujarat",
-    },
-  },
-  {
-    id: "seed_post_3",
-    user_id: "seed_farmer_3",
-    title: "Pre-monsoon showers alert for Western Maharashtra & Belagavi",
-    content: "IMD radar shows heavy localized rain and gusty winds over Nashik, Pune, and Belagavi over the next 48 hours. Please cover open storage sheds and ensure proper furrow drainage in onion and potato fields.",
-    category: "weather",
-    crop: "Onion",
-    state: "Maharashtra",
-    likes_count: 22,
-    comments_count: 1,
-    is_pinned: false,
-    created_at: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
-    user: {
-      full_name: "Anand Shinde",
-      state: "Maharashtra",
-    },
-  },
-  {
-    id: "seed_post_4",
-    user_id: "seed_farmer_4",
-    title: "PM-Kisan 18th Installment: Check your e-KYC & Land Seeding status",
-    content: "Farmers whose recent PM-Kisan installment was delayed should verify their Aadhaar bank account linking on the PM-Kisan portal. Ensure NPCI DBT mapping is active in your bank branch to avoid automatic payment rejections.",
-    category: "schemes",
-    crop: "Wheat",
-    state: "Uttar Pradesh",
-    likes_count: 41,
-    comments_count: 1,
-    is_pinned: false,
-    created_at: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString(),
-    user: {
-      full_name: "Kavita Devi",
-      state: "Uttar Pradesh",
-    },
-  },
-];
-
-const SEED_COMMENTS: Record<string, ForumComment[]> = {
-  seed_post_1: [
-    {
-      id: "comment_1_1",
-      post_id: "seed_post_1",
-      user_id: "user_seed_c1",
-      content: "Confirmed from Madanapalle as well! Grade-A tomatoes are fetching ₹3,350 today.",
-      likes_count: 4,
-      created_at: new Date(Date.now() - 90 * 60 * 1000).toISOString(),
-      user: { full_name: "Venkat Reddy" },
-    },
-    {
-      id: "comment_1_2",
-      post_id: "seed_post_1",
-      user_id: "user_seed_c2",
-      content: "How are the transport rates per crate from Chintamani to Kolar?",
-      likes_count: 1,
-      created_at: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
-      user: { full_name: "Manjunath K" },
-    },
-  ],
-  seed_post_2: [
-    {
-      id: "comment_2_1",
-      post_id: "seed_post_2",
-      user_id: "user_seed_c3",
-      content: "Sour buttermilk spray also helps with powdery mildew. Great advice!",
-      likes_count: 5,
-      created_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-      user: { full_name: "Bhavin Shah" },
-    },
-  ],
-  seed_post_3: [
-    {
-      id: "comment_3_1",
-      post_id: "seed_post_3",
-      user_id: "user_seed_c4",
-      content: "Rains already started in Lasalgaon mandi. Arrivals paused for now.",
-      likes_count: 2,
-      created_at: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
-      user: { full_name: "Dnyaneshwar Patil" },
-    },
-  ],
-  seed_post_4: [
-    {
-      id: "comment_4_1",
-      post_id: "seed_post_4",
-      user_id: "user_seed_c5",
-      content: "Checked my CSC center today, land seeding was missing. Updated and verified!",
-      likes_count: 3,
-      created_at: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString(),
-      user: { full_name: "Rajendra Yadav" },
-    },
-  ],
-};
 
 const LOCAL_POSTS_STORAGE_KEY = "agro_local_forum_posts";
 const LOCAL_COMMENTS_PREFIX = "agro_local_forum_comments_";
@@ -178,36 +49,27 @@ function getLocalPosts(): ForumPost[] {
 }
 
 function saveLocalPosts(posts: ForumPost[]) {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(LOCAL_POSTS_STORAGE_KEY, JSON.stringify(posts));
-  } catch (e) {
-    console.warn("Failed to save local posts:", e);
-  }
+  if (typeof window === "undefined") throw new Error("Browser storage unavailable");
+  localStorage.setItem(LOCAL_POSTS_STORAGE_KEY, JSON.stringify(posts));
 }
 
 function getLocalComments(postId: string): ForumComment[] {
-  if (typeof window === "undefined") return SEED_COMMENTS[postId] || [];
+  if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(LOCAL_COMMENTS_PREFIX + postId);
     const local = raw ? JSON.parse(raw) : [];
-    const seed = SEED_COMMENTS[postId] || [];
-    return [...seed, ...local];
+    return local.map((comment: ForumComment) => ({ ...comment, storage: "local" }));
   } catch {
-    return SEED_COMMENTS[postId] || [];
+    return [];
   }
 }
 
 function saveLocalComment(postId: string, comment: ForumComment) {
-  if (typeof window === "undefined") return;
-  try {
-    const raw = localStorage.getItem(LOCAL_COMMENTS_PREFIX + postId);
-    const list: ForumComment[] = raw ? JSON.parse(raw) : [];
-    list.push(comment);
-    localStorage.setItem(LOCAL_COMMENTS_PREFIX + postId, JSON.stringify(list));
-  } catch (e) {
-    console.warn("Failed to save local comment:", e);
-  }
+  if (typeof window === "undefined") throw new Error("Browser storage unavailable");
+  const raw = localStorage.getItem(LOCAL_COMMENTS_PREFIX + postId);
+  const list: ForumComment[] = raw ? JSON.parse(raw) : [];
+  list.push(comment);
+  localStorage.setItem(LOCAL_COMMENTS_PREFIX + postId, JSON.stringify(list));
 }
 
 function getLocalLikedPosts(): Set<string> {
@@ -230,7 +92,7 @@ function setLocalLikedPosts(ids: Set<string>) {
 }
 
 /**
- * Get all forum posts with pagination (merges Supabase + local + seed posts)
+ * Get all forum posts with pagination (merges Supabase and local posts)
  */
 export async function getForumPosts(
   category?: string,
@@ -289,17 +151,8 @@ export async function getForumPosts(
     localPosts = localPosts.filter((p) => p.category === category);
   }
 
-  // If no DB posts and no local posts, use SEED_POSTS
-  let seedToInclude: ForumPost[] = [];
-  if (dbPosts.length === 0) {
-    seedToInclude = SEED_POSTS;
-    if (category && category !== "all") {
-      seedToInclude = seedToInclude.filter((p) => p.category === category);
-    }
-  }
-
   // Combine and deduplicate
-  const combined = [...localPosts, ...dbPosts, ...seedToInclude];
+  const combined = [...localPosts, ...dbPosts];
   const seenIds = new Set<string>();
   const uniquePosts: ForumPost[] = [];
 
@@ -356,9 +209,9 @@ export async function getForumPost(postId: string) {
     }
   } catch (e) {}
 
-  // Fallback to local posts or seed posts
+  // Fallback to local posts
   const localPosts = getLocalPosts();
-  const post = localPosts.find((p) => p.id === postId) || SEED_POSTS.find((p) => p.id === postId);
+  const post = localPosts.find((p) => p.id === postId);
 
   if (post) {
     return {
@@ -421,8 +274,9 @@ export async function createForumPost(
     }
   }
 
-  // Graceful local creation for demo & guest users (always succeeds)
+  // Local creation for demo, guest, or unavailable remote storage.
   const localPost: ForumPost = {
+    storage: "local",
     id: "local_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7),
     user_id: user?.id || "demo_farmer_id",
     title,
@@ -467,7 +321,7 @@ export async function createComment(
     user.email !== "demo@agroprofit.pro" &&
     user.id !== "00000000-0000-0000-0000-000000000001";
 
-  if (isRealUser) {
+  if (isRealUser && !postId.startsWith("local_")) {
     try {
       const { data, error } = await supabase
         .from("forum_comments")
@@ -494,6 +348,7 @@ export async function createComment(
 
   // Local / Demo comment
   const localComment: ForumComment = {
+    storage: "local",
     id: "comment_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7),
     post_id: postId,
     user_id: user?.id || "demo_farmer_id",
@@ -634,6 +489,10 @@ export async function getPriceHistory(
   recorded_date: string;
   created_at: string;
 }>> {
+  // Demo mode has no local price-history source. Return an empty series so
+  // the trend page can show an honest "unavailable" state without a request.
+  if (!liveServicesEnabled(import.meta.env)) return [];
+
   let query = supabase
     .from("price_history")
     .select("*")

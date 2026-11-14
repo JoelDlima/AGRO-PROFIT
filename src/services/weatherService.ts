@@ -1,3 +1,4 @@
+import { requireLiveService, liveServicesEnabled } from '@/lib/demoConfig';
 /**
  * WeatherAPI.com Service
  * Provides weather data for farming decisions and advisory
@@ -69,6 +70,7 @@ export async function getCurrentWeather(
   latitude?: number,
   longitude?: number
 ): Promise<WeatherData | null> {
+  requireLiveService(liveServicesEnabled(import.meta.env), 'Weather');
   // Tier 1: Try same-origin serverless proxy /api/weather
   try {
     let url = `/api/weather?location=${encodeURIComponent(location || 'India')}`;
@@ -90,7 +92,7 @@ export async function getCurrentWeather(
   try {
       let omUrl: string;
       if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
-        omUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m`;
+        omUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,cloud_cover`;
       } else {
         const STATE_COORDINATES: Record<string, { lat: number; lon: number }> = {
         maharashtra: { lat: 19.7515, lon: 75.7139 },
@@ -115,7 +117,7 @@ export async function getCurrentWeather(
 
         const locKey = (location || '').toLowerCase().trim();
         const coords = STATE_COORDINATES[locKey] || STATE_COORDINATES['india'];
-        omUrl = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m`;
+        omUrl = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,cloud_cover`;
       }
       
       const omRes = await fetch(omUrl);
@@ -140,7 +142,7 @@ export async function getCurrentWeather(
           description: desc,
           icon,
           wind_speed: Math.round(current.wind_speed_10m * 10) / 10,
-          clouds: 20,
+          clouds: current.cloud_cover,
           rain: current.precipitation > 0 ? current.precipitation : undefined,
         };
       }

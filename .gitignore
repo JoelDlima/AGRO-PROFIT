@@ -47,3 +47,25 @@ Thumbs.db
 *.tmp
 *.temp
 *.cache
+
+# Local verification artifacts
+.qa/
+.temp/
+.npm-cache/
+.playwright-mcp/
+
+# Inherited setup notes and exploratory documents. Several contain
+# placeholder credential examples that must not be published or mistaken for
+# working configuration. They remain locally available outside this commit.
+md_info/
+GEMINI_SETUP.md
+GOOGLE_OAUTH_SETUP.md
+WEATHER_SETUP.md
+test-crops.html
+apk/
+gifs/
+bun.lockb
+
+# Local logs and reports
+*.log
+

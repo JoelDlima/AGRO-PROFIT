@@ -54,6 +54,14 @@ export default function ExportReport() {
       if (reportType === "current") {
         // Current Prices Report
         const topMarkets = currentMarkets?.slice(0, 20) || [];
+        if (topMarkets.length === 0) {
+          toast({
+            title: t("export.failed"),
+            description: `${t("stateMap.noData")} ${selectedCropData?.name || ""}`,
+            variant: "destructive",
+          });
+          return;
+        }
         
         // Summary stats
         const avgPrice = Math.round(topMarkets.reduce((sum, m) => sum + m.price, 0) / topMarkets.length);
@@ -93,6 +101,14 @@ export default function ExportReport() {
       } else {
         // Historical Prices Report
         const historyData = await getPriceHistory(selectedCropData?.name || "", undefined, 14);
+        if (!historyData?.length) {
+          toast({
+            title: t("export.failed"),
+            description: `${t("stateMap.noData")} ${selectedCropData?.name || ""}`,
+            variant: "destructive",
+          });
+          return;
+        }
         
         if (historyData && historyData.length > 0) {
           // Group by date and calculate daily averages
@@ -281,7 +297,7 @@ export default function ExportReport() {
                     <Table2 className="h-4 w-4" />
                     <span className="font-semibold">{t("export.currentPrices")}</span>
                   </div>
-                  <span className="text-xs text-left opacity-80">
+                  <span className="text-xs text-left opacity-80 whitespace-normal">
                     {t("export.currentDesc")}
                   </span>
                 </Button>
@@ -294,7 +310,7 @@ export default function ExportReport() {
                     <FileText className="h-4 w-4" />
                     <span className="font-semibold">{t("export.historical")}</span>
                   </div>
-                  <span className="text-xs text-left opacity-80">
+                  <span className="text-xs text-left opacity-80 whitespace-normal">
                     {t("export.historicalDesc")}
                   </span>
                 </Button>
@@ -418,7 +434,7 @@ export default function ExportReport() {
             <div>
               <p className="font-medium text-foreground">Share with Fellow Farmers</p>
               <p className="text-sm text-muted-foreground">
-                These reports can be shared via WhatsApp or printed for farmer meetings and discussions about best selling strategies.
+                These reports can be shared or printed for discussions about the market information they contain. They are not selling advice.
               </p>
             </div>
           </CardContent>
